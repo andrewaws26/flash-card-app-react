@@ -123,10 +123,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     );
   }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
 
-  const handleSectionChange = (section) => {
-    loadFlashcards(section);
-  };
-
   const handleKnowIt = () => {
     setCorrectAnswers(correctAnswers + 1);
     setCurrentCardIndex(currentCardIndex + 1);

@@ -57,25 +57,27 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
   };
 
   return (
-    <ButtonGroupContainer>
-      <StyledButton className="toggle-menu-button" onClick={toggleMenu}>
-        {menuExpanded ? 'Collapse Menu' : 'Expand Menu'}
-      </StyledButton>
-      <StyledButton onClick={onToggleDarkMode}>
-        Toggle Dark Mode
-      </StyledButton>
-      <StyledButton onClick={onReset}>
-        Reset
-      </StyledButton>
-      {sections.map((section) => (
-        <StyledButton
-          key={section.value}
-          onClick={() => onSectionChange(section.value)}
-        >
-          {section.label}
+    <div id="button-container">
+      <ButtonGroupContainer>
+        <StyledButton className="toggle-menu-button" onClick={toggleMenu}>
+          {menuExpanded ? 'Collapse Menu' : 'Expand Menu'}
         </StyledButton>
-      ))}
-    </ButtonGroupContainer>
+        <StyledButton onClick={onToggleDarkMode}>
+          Toggle Dark Mode
+        </StyledButton>
+        <StyledButton onClick={onReset}>
+          Reset
+        </StyledButton>
+        {sections.map((section) => (
+          <StyledButton
+            key={section.value}
+            onClick={() => onSectionChange(section.value)}
+          >
+            {section.label}
+          </StyledButton>
+        ))}
+      </ButtonGroupContainer>
+    </div>
   );
 }
 

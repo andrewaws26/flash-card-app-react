@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Flashcard from './Flashcard';
 import styled from 'styled-components';
+import Spinner from './Spinner'; // Correct import path
 
 const Container = styled.div`
   display: flex;
@@ -26,9 +27,9 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [missedCards, setMissedCards] = useState([]);
-  // eslint-disable-next-line no-unused-vars
   const [reviewingMissedCards, setReviewingMissedCards] = useState(false);
   const [cardRevealed, setCardRevealed] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const shuffleArray = (array) => {
     const newArray = [...array];
@@ -40,6 +41,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   };
 
   const loadFlashcards = useCallback(async (section) => {
+    setLoading(true); // Set loading to true
     console.log('loadFlashcards called with section:', section);
     try {
       const response = await fetch(`${process.env.PUBLIC_URL}/data/${section}`);
@@ -66,6 +68,8 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
       console.log('State reset complete');
     } catch (error) {
       console.error('Error in loadFlashcards:', error);
+    } finally {
+      setLoading(false); // Set loading to false
     }
   }, []);
 
@@ -124,7 +128,9 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
       <SwipeInstructions>
         After revealing the answer, swipe right if you know it, left if you don't.
       </SwipeInstructions>
-      {flashcardsData.length === 0 ? (
+      {loading ? (
+        <Spinner /> // Show spinner when loading
+      ) : flashcardsData.length === 0 ? (
         <div>Loading flashcards...</div>
       ) : currentCardIndex >= flashcardsData.length ? (
         <div>All cards completed! Click Reset to start over.</div>

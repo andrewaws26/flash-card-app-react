@@ -14,6 +14,7 @@ export const lightTheme = {
   hoverShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
   swipeRight: '#22c55e',
   swipeLeft: '#ef4444',
+  buttonHover: '#e2e8f0',
 };
 
 export const darkTheme = {
@@ -30,6 +31,7 @@ export const darkTheme = {
   hoverShadow: '0 10px 15px -3px rgb(0 0 0 / 0.3)',
   swipeRight: '#4ade80',
   swipeLeft: '#f87171',
+  buttonHover: '#4b5563',
 };
 
 export const GlobalStyle = createGlobalStyle`
@@ -52,5 +54,10 @@ export const GlobalStyle = createGlobalStyle`
 
   button {
     font-family: 'Inter', -apple-system, sans-serif;
+    color: ${({ theme }) => theme.text};
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: ${({ theme }) => theme.buttonHover};
+    }
   }
 `;

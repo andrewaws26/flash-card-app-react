@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const ButtonGroupContainer = styled.div`
@@ -22,7 +22,7 @@ const StyledButton = styled.button`
   cursor: pointer;
   font-weight: 500;
   width: 100%;
-  transition: all 0.2s ease;
+  transition: all 0.2s ease, background-color 0.3s, transform 0.3s;
   box-shadow: ${({ theme }) => theme.shadow};
 
   &:hover {
@@ -39,6 +39,8 @@ const StyledButton = styled.button`
 `;
 
 function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
+  const [menuExpanded, setMenuExpanded] = useState(false);
+
   const sections = [
     { label: 'Ch 1 Study Guide', value: 'ch-one-study-guide.json' },
     { label: 'Ch 8', value: 'flashcards-ch-eight.json' },
@@ -49,8 +51,16 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
     { label: 'Lab 12', value: 'flashcards-lab-twelve.json' },
   ];
 
+  const toggleMenu = () => {
+    setMenuExpanded(!menuExpanded);
+    document.getElementById('button-container').classList.toggle('expanded');
+  };
+
   return (
     <ButtonGroupContainer>
+      <StyledButton className="toggle-menu-button" onClick={toggleMenu}>
+        {menuExpanded ? 'Collapse Menu' : 'Expand Menu'}
+      </StyledButton>
       <StyledButton onClick={onToggleDarkMode}>
         Toggle Dark Mode
       </StyledButton>

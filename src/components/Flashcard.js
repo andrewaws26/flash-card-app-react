@@ -75,6 +75,7 @@ const SwipeableCard = styled(FlashcardContainer)`
     color: ${props => props.swipeDirection === 'right' ? '#22c55e' : '#ef4444'};
     font-size: 1.2rem;
     pointer-events: none;
+    transition: opacity 0.3s ease;
   }
 `;
 

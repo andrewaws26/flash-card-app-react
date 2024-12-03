@@ -1,4 +1,3 @@
-
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
@@ -6,6 +5,7 @@ export const GlobalStyles = createGlobalStyle`
 
   body {
     /* ...existing global styles... */
+    transition: background-color 0.3s, color 0.3s;
   }
 
   /* ...additional global styles... */

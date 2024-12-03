@@ -56,19 +56,43 @@ const StatItem = styled.div`
   }
 `;
 
+const ProgressBar = styled.div`
+  width: 100%;
+  height: 8px;
+  background: ${({ theme }) => theme.border};
+  border-radius: 4px;
+  margin: 1rem 0;
+  overflow: hidden;
+`;
+
+const Progress = styled.div`
+  width: ${({ progress }) => progress}%;
+  height: 100%;
+  background: ${({ theme }) => theme.accent};
+  transition: width 0.3s ease;
+`;
+
 function Counters({ totalCards, correctAnswers, incorrectAnswers }) {
+  const progress = totalCards ? ((correctAnswers + incorrectAnswers) / totalCards) * 100 : 0;
+
   return (
-    <CountersContainer>
-      <CounterItem>
-        <p>Total Cards: <span>{totalCards}</span></p>
-      </CounterItem>
-      <CounterItem>
-        <p>Correct Answers: <span>{correctAnswers}</span></p>
-      </CounterItem>
-      <CounterItem>
-        <p>Incorrect Answers: <span>{incorrectAnswers}</span></p>
-      </CounterItem>
-    </CountersContainer>
+    <StatsContainer>
+      <StatItem>
+        <h3>Total Cards</h3>
+        <span>{totalCards}</span>
+      </StatItem>
+      <StatItem>
+        <h3>Correct</h3>
+        <span style={{ color: '#22c55e' }}>{correctAnswers}</span>
+      </StatItem>
+      <StatItem>
+        <h3>Incorrect</h3>
+        <span style={{ color: '#ef4444' }}>{incorrectAnswers}</span>
+      </StatItem>
+      <ProgressBar>
+        <Progress progress={progress} />
+      </ProgressBar>
+    </StatsContainer>
   );
 }
 

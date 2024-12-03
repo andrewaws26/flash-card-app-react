@@ -6,6 +6,19 @@ import Counters from './components/Counters';
 import FlashcardContainer from './components/FlashcardContainer';
 import './styles/styles.css';
 import { AppContainer, MainContent, Sidebar } from './components/Layout';
+import styled from 'styled-components';
+
+const Header = styled.h1`
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.accent};
+  margin-bottom: 2rem;
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+`;
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -63,7 +76,7 @@ function App() {
           />
         </Sidebar>
         <MainContent>
-          <h1>Anatomy Flashcards Test</h1>
+          <Header>Anatomy Flashcards</Header>
           <Counters 
             totalCards={totalCards}
             correctAnswers={correctAnswers}

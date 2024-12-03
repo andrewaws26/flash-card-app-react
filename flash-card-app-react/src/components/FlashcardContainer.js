@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Flashcard from './Flashcard';
 import styled from 'styled-components';
 
@@ -30,32 +30,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [reviewingMissedCards, setReviewingMissedCards] = useState(false);
   const [cardRevealed, setCardRevealed] = useState(false);
 
-  useEffect(() => {
-    console.log('FlashcardContainer: currentSection changed to:', currentSection);
-    if (!currentSection) {
-      console.log('Empty section detected, resetting state');
-      setFlashcardsData([]);
-      setCurrentCardIndex(0);
-      setCorrectAnswers(0);
-      setIncorrectAnswers(0);
-      setMissedCards([]);
-      setReviewingMissedCards(false);
-      setCardRevealed(false);
-      return;
-    }
-    console.log('Loading flashcards for section:', currentSection);
-    loadFlashcards(currentSection);
-  }, [currentSection, loadFlashcards]);
-
-  useEffect(() => {
-    // Update parent component with stats whenever they change
-    onStatsUpdate(
-      flashcardsData.length,
-      correctAnswers,
-      incorrectAnswers
-    );
-  }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
-
   const shuffleArray = (array) => {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
@@ -65,7 +39,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     return newArray;
   };
 
-  const loadFlashcards = async (section) => {
+  const loadFlashcards = useCallback(async (section) => {
     console.log('loadFlashcards called with section:', section);
     try {
       const response = await fetch(`${process.env.PUBLIC_URL}/data/${section}`);
@@ -93,7 +67,33 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     } catch (error) {
       console.error('Error in loadFlashcards:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    console.log('FlashcardContainer: currentSection changed to:', currentSection);
+    if (!currentSection) {
+      console.log('Empty section detected, resetting state');
+      setFlashcardsData([]);
+      setCurrentCardIndex(0);
+      setCorrectAnswers(0);
+      setIncorrectAnswers(0);
+      setMissedCards([]);
+      setReviewingMissedCards(false);
+      setCardRevealed(false);
+      return;
+    }
+    console.log('Loading flashcards for section:', currentSection);
+    loadFlashcards(currentSection);
+  }, [currentSection, loadFlashcards]);
+
+  useEffect(() => {
+    // Update parent component with stats whenever they change
+    onStatsUpdate(
+      flashcardsData.length,
+      correctAnswers,
+      incorrectAnswers
+    );
+  }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
 
   // eslint-disable-next-line no-unused-vars
   const handleSectionChange = (section) => {

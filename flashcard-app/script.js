@@ -98,7 +98,7 @@ labElevenButton.addEventListener('click', () => {
 });
 
 labTwelveButton.addEventListener('click', () => {
-    loadFlashcards('flashcards-lab-twelve.json'); // Assuming you have a JSON file for Lab 12 cards
+    loadFlashcards('flashcards-lab-twelve.json'); // Assuming you have a JSON file for Lab 12 card
     setActiveButton(labTwelveButton);
 });
 

@@ -63,7 +63,7 @@ function App() {
           />
         </Sidebar>
         <MainContent>
-          <h1>Anatomy Flashcards</h1>
+          <h1>Anatomy Flashcards Test</h1>
           <Counters 
             totalCards={totalCards}
             correctAnswers={correctAnswers}

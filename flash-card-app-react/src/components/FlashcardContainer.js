@@ -45,7 +45,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     }
     console.log('Loading flashcards for section:', currentSection);
     loadFlashcards(currentSection);
-  }, [currentSection]);
+  }, [currentSection, loadFlashcards]);
 
   useEffect(() => {
     // Update parent component with stats whenever they change

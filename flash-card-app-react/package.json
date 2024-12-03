@@ -1,6 +1,6 @@
 {
-  "name": "flashcard-app",
-  "version": "1.0.0",
+  "name": "flash-card-app-react",
+  "version": "0.1.0",
   "private": true,
   "homepage": "https://andrewaws26.github.io/flash-card-app-react",
   "dependencies": {

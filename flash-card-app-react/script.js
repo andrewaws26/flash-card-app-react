@@ -112,7 +112,7 @@ function setActiveButton(activeButton) {
     activeButton.classList.remove('inactive-button');
 }
 
-// ... [Other parts of your code remain unchanged] ..
+// ... [Other parts of your code remain unchanged] .......
 
 // Create flashcard elements and add them to the container
 function createFlashcards(cardsData) {

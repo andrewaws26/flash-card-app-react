@@ -54,7 +54,7 @@ function App() {
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <GlobalStyle />
-      <AppContainer>
+      <AppContainer basename={process.env.PUBLIC_URL}>
         <Sidebar>
           <ButtonGroup
             onToggleDarkMode={handleToggleDarkMode}

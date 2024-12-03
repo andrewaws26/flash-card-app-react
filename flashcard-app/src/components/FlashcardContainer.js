@@ -67,7 +67,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const loadFlashcards = async (section) => {
     console.log('loadFlashcards called with section:', section);
     try {
-      const response = await fetch(`/data/${section}`);
+      const response = await fetch(`${process.env.PUBLIC_URL}/data/${section}`);
       console.log('Fetch response status:', response.status);
       
       if (!response.ok) {

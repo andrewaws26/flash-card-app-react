@@ -20,14 +20,14 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: flashcard-app
+      working-directory: flash-card-app-react
 
     - name: Build project
       run: npm run build
-      working-directory: flashcard-app
+      working-directory: flash-card-app-react
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: flashcard-app/build
+        publish_dir: flash-card-app-react/build

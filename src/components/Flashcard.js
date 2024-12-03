@@ -88,13 +88,13 @@ function Flashcard({ data, onKnowIt, onDontKnowIt, onCardClick, cardRevealed }) 
       setSwipeAmount(Math.min(amount, 100));
       setSwipeDirection(eventData.deltaX > 0 ? 'right' : 'left');
     },
-    onSwipeLeft: () => {
+    onSwipedLeft: () => {
       if (cardRevealed) onDontKnowIt();
     },
-    onSwipeRight: () => {
+    onSwipedRight: () => {
       if (cardRevealed) onKnowIt();
     },
-    onSwipeEnd: () => {
+    onSwiped: () => {
       setSwipeAmount(0);
       setSwipeDirection(null);
     },

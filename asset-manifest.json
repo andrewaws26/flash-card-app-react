@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/flash-card-app-react/static/css/main.74705559.css",
-    "main.js": "/flash-card-app-react/static/js/main.740feb3a.js",
+    "main.js": "/flash-card-app-react/static/js/main.c09ddbeb.js",
     "index.html": "/flash-card-app-react/index.html",
     "main.74705559.css.map": "/flash-card-app-react/static/css/main.74705559.css.map",
-    "main.740feb3a.js.map": "/flash-card-app-react/static/js/main.740feb3a.js.map"
+    "main.c09ddbeb.js.map": "/flash-card-app-react/static/js/main.c09ddbeb.js.map"
   },
   "entrypoints": [
     "static/css/main.74705559.css",
-    "static/js/main.740feb3a.js"
+    "static/js/main.c09ddbeb.js"
   ]
 }

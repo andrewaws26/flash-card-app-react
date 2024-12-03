@@ -27,7 +27,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [missedCards, setMissedCards] = useState([]);
-  const [reviewingMissedCards, setReviewingMissedCards] = useState(false);
   const [cardRevealed, setCardRevealed] = useState(false);
   const [loading, setLoading] = useState(false); // Add loading state
 
@@ -62,7 +61,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
       setCorrectAnswers(0);
       setIncorrectAnswers(0);
       setMissedCards([]);
-      setReviewingMissedCards(false);
       setCardRevealed(false);
       
       console.log('State reset complete');
@@ -82,7 +80,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
       setCorrectAnswers(0);
       setIncorrectAnswers(0);
       setMissedCards([]);
-      setReviewingMissedCards(false);
       setCardRevealed(false);
       return;
     }

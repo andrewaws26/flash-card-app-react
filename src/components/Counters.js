@@ -1,29 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const CountersContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-`;
+// Removed unused styled components
 
-const CounterItem = styled.div`
-  margin: 0 15px;
-  text-align: center;
-
-  p {
-    margin: 0;
-  }
-
-  span {
-    color: ${({ theme }) => theme.accent};
-    font-weight: bold;
-    font-size: 1.2em;
-  }
-`;
-
-// eslint-disable-next-line no-unused-vars
 const StatsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -35,7 +14,6 @@ const StatsContainer = styled.div`
   box-shadow: ${({ theme }) => theme.shadow};
 `;
 
-// eslint-disable-next-line no-unused-vars
 const StatItem = styled.div`
   text-align: center;
   padding: 1rem;

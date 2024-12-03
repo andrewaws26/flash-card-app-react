@@ -102,7 +102,7 @@ labTwelveButton.addEventListener('click', () => {
     setActiveButton(labTwelveButton);
 });
 
-// Function to set the active button.
+// Function to set the active button
 function setActiveButton(activeButton) {
     sectionButtons.forEach(button => {
         button.classList.remove('active-button');

@@ -26,6 +26,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [missedCards, setMissedCards] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [reviewingMissedCards, setReviewingMissedCards] = useState(false);
   const [cardRevealed, setCardRevealed] = useState(false);
 
@@ -94,6 +95,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleSectionChange = (section) => {
     loadFlashcards(section);
   };

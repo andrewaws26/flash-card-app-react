@@ -23,6 +23,7 @@ const CounterItem = styled.div`
   }
 `;
 
+// eslint-disable-next-line no-unused-vars
 const StatsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -34,6 +35,7 @@ const StatsContainer = styled.div`
   box-shadow: ${({ theme }) => theme.shadow};
 `;
 
+// eslint-disable-next-line no-unused-vars
 const StatItem = styled.div`
   text-align: center;
   padding: 1rem;

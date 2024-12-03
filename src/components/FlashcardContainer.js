@@ -7,6 +7,16 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  ${({ focusMode }) => focusMode && `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: ${({ theme }) => theme.background};
+    z-index: 1000;
+    padding: 1rem;
+  `}
 `;
 
 const SwipeInstructions = styled.div`
@@ -21,6 +31,22 @@ const SwipeInstructions = styled.div`
   }
 `;
 
+const FocusButton = styled.button`
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: ${({ theme }) => theme.accent};
+  color: ${({ theme }) => theme.surface};
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+
+  &:hover {
+    background: ${({ theme }) => theme.secondary};
+  }
+`;
+
 function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [flashcardsData, setFlashcardsData] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -29,6 +55,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [missedCards, setMissedCards] = useState([]);
   const [cardRevealed, setCardRevealed] = useState(false);
   const [loading, setLoading] = useState(false); // Add loading state
+  const [focusMode, setFocusMode] = useState(false); // Add focus mode state
 
   const shuffleArray = (array) => {
     const newArray = [...array];
@@ -96,7 +123,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     );
   }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
 
-  // eslint-disable-next-line no-unused-vars
   const handleSectionChange = (section) => {
     loadFlashcards(section);
   };
@@ -120,8 +146,12 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     }
   };
 
+  const toggleFocusMode = () => {
+    setFocusMode(!focusMode);
+  };
+
   return (
-    <Container>
+    <Container focusMode={focusMode}>
       <SwipeInstructions>
         After revealing the answer, swipe right if you know it, left if you don't.
       </SwipeInstructions>
@@ -140,6 +170,9 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
           cardRevealed={cardRevealed}
         />
       )}
+      <FocusButton onClick={toggleFocusMode}>
+        {focusMode ? 'Exit Focus Mode' : 'Enter Focus Mode'}
+      </FocusButton>
     </Container>
   );
 }

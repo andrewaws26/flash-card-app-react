@@ -17,6 +17,13 @@ const FlashcardContainer = styled.div`
     transform: translateY(-4px);
     box-shadow: ${({ theme }) => theme.hoverShadow};
   }
+
+  ${({ focusMode }) => focusMode && `
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  `}
 `;
 
 const Term = styled.h2`
@@ -79,7 +86,7 @@ const SwipeableCard = styled(FlashcardContainer)`
   }
 `;
 
-function Flashcard({ data, onKnowIt, onDontKnowIt, onCardClick, cardRevealed }) {
+function Flashcard({ data, onKnowIt, onDontKnowIt, onCardClick, cardRevealed, focusMode }) {
   const [swipeDirection, setSwipeDirection] = React.useState(null);
   const [swipeAmount, setSwipeAmount] = React.useState(0);
 
@@ -115,6 +122,7 @@ function Flashcard({ data, onKnowIt, onDontKnowIt, onCardClick, cardRevealed }) 
       showHint={cardRevealed}
       swipeDirection={swipeDirection}
       swipeAmount={swipeAmount}
+      focusMode={focusMode}
       style={{
         transform: `translateX(${swipeAmount * (swipeDirection === 'right' ? 1 : -1)}px)`,
         transition: swipeAmount ? 'none' : 'all 0.3s ease'

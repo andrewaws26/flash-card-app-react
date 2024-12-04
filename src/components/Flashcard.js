@@ -14,7 +14,7 @@ const FlashcardWrapper = styled.div`
 const Card = styled.div`
   width: 100%;
   perspective: 1000px;
-  margin-bottom: 1rem;
+  margin-bottom: ${({ $flipped }) => ($flipped ? '4rem' : '0')};
 `;
 
 const CardInner = styled.div`
@@ -22,7 +22,7 @@ const CardInner = styled.div`
   width: 100%;
   transition: transform 0.6s;
   transform-style: preserve-3d;
-  transform: ${({ flipped }) => (flipped ? 'rotateY(180deg)' : 'none')};
+  transform: ${({ $flipped }) => ($flipped ? 'rotateY(180deg)' : 'none')};
   cursor: pointer;
   min-height: 200px; // Ensure minimum height for content
 `;
@@ -87,7 +87,7 @@ const ButtonContainer = styled.div`
 const ActionButton = styled.button`
   flex: 1;
   max-width: 200px;
-  background: ${({ correct, theme }) => correct ? theme.success : theme.accent};
+  background: ${({ $correct, theme }) => $correct ? theme.success : theme.accent};
   color: white;
   border: none;
   padding: 1rem;
@@ -98,7 +98,7 @@ const ActionButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-    background: ${({ correct, theme }) => correct ? theme.success : theme.secondary};
+    background: ${({ $correct, theme }) => $correct ? theme.success : theme.secondary};
   }
 
   @media (max-width: 768px) {
@@ -115,8 +115,8 @@ function Flashcard({ data, onKnowIt, onDontKnowIt }) {
 
   return (
     <FlashcardWrapper>
-      <Card flipped={flipped}>
-        <CardInner flipped={flipped} onClick={handleFlip}>
+      <Card $flipped={flipped}>
+        <CardInner $flipped={flipped} onClick={handleFlip}>
           <CardFront>
             <Definition>{data.definition}</Definition>
             {!flipped && <small>Tap to reveal the answer</small>}
@@ -129,7 +129,7 @@ function Flashcard({ data, onKnowIt, onDontKnowIt }) {
       </Card>
       <ButtonContainer>
         <ActionButton
-          correct
+          $correct
           onClick={(e) => {
             e.stopPropagation();
             onKnowIt();

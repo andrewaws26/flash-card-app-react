@@ -1,7 +1,21 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  /* Remove @import and use link tag in index.html instead */
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.3s ease;
+  }
+
+  #root {
+    min-height: 100vh;
+    background-color: ${({ theme }) => theme.background};
+  }
 
   body {
     font-family: 'Inter', sans-serif;

@@ -184,6 +184,15 @@ body {
         margin-top: 10px;
         margin-bottom: 10px;
     }
+
+    .flashcard-wrapper {
+        width: 100%;
+        padding: 0 1rem;
+    }
+
+    .flashcard-container.focus-mode {
+        padding: 0;
+    }
 }
 
 /* For larger screens (desktop), keep the buttons at the top */

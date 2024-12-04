@@ -17,6 +17,8 @@ const Container = styled.div`
     z-index: 1000;
     padding: 1rem;
   `}
+    justify-content: center; // Center content vertically
+  `}
 `;
 
 const SwipeInstructions = styled.div`
@@ -49,6 +51,11 @@ const FocusButton = styled.button`
 
 function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [flashcardsData, setFlashcardsData] = useState([]);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
+  const [missedCards, setMissedCards] = useState([]);
+  const [cardRevealed, setCardRevealed] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
@@ -155,21 +162,29 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
         <Spinner /> // Show spinner when loading
       ) : flashcardsData.length === 0 ? (
         <div>Loading flashcards...</div>
-      ) : currentCardIndex >= flashcardsData.length ? (
-        <div>All cards completed! Click Reset to start over.</div>
-      ) : (
-        <Flashcard
-          data={flashcardsData[currentCardIndex]}
-          onKnowIt={handleKnowIt}
-          onDontKnowIt={handleDontKnowIt}
-          onCardClick={handleCardClick}
-          cardRevealed={cardRevealed}
-        />
+            data={flashcardsData[currentCardIndex]}
+            onKnowIt={handleKnowIt}
+            onDontKnowIt={handleDontKnowIt}
+            onCardClick={handleCardClick}
+            cardRevealed={cardRevealed}
+            focusMode={focusMode}
+          />
+            onDontKnowIt={handleDontKnowIt}
+            onCardClick={handleCardClick}
+            cardRevealed={cardRevealed}
+            focusMode={focusMode}
+          />
+    </Container>
+        </FlashcardWrapper>
       )}
       <FocusButton onClick={toggleFocusMode}>
         {focusMode ? 'Exit Focus Mode' : 'Enter Focus Mode'}
       </FocusButton>
     </Container>
+  );
+}
+
+export default FlashcardContainer;
   );
 }
 

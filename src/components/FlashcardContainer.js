@@ -184,12 +184,14 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
           After revealing the answer, swipe right if you know it, left if you don't.
         </SwipeInstructions>
       )}
-      <Counters 
-        totalCards={flashcardsData.length}
-        correctAnswers={correctAnswers}
-        incorrectAnswers={incorrectAnswers}
-        $focusMode={focusMode}
-      />
+      {!focusMode && (
+        <Counters 
+          totalCards={flashcardsData.length}
+          correctAnswers={correctAnswers}
+          incorrectAnswers={incorrectAnswers}
+          $focusMode={focusMode}
+        />
+      )}
       {loading ? (
         <Spinner />
       ) : flashcardsData.length === 0 ? (

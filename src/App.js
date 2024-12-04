@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme, darkTheme, GlobalStyle } from './theme';
+import { lightTheme, darkTheme } from './theme'; // Removed GlobalStyle import
 import ButtonGroup from './components/ButtonGroup';
 import Counters from './components/Counters';
 import FlashcardContainer from './components/FlashcardContainer';
 import './styles/styles.css';
 import { AppContainer, MainContent, Sidebar } from './components/Layout';
 import styled from 'styled-components';
+import { GlobalStyles } from './GlobalStyles'; // Ensure only GlobalStyles is imported
 
 const Header = styled.h1`
   font-size: 2.5rem;
@@ -74,7 +75,7 @@ function App() {
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <GlobalStyle />
+      <GlobalStyles /> {/* Use only GlobalStyles */}
       <AppContainer basename={process.env.PUBLIC_URL}>
         <Sidebar>
           <ButtonGroup

@@ -34,30 +34,31 @@ export const darkTheme = {
   buttonHover: '#4b5563',
 };
 
-export const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+// Remove the GlobalStyle export
+// export const GlobalStyle = createGlobalStyle`
+//   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
   
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+//   * {
+//     box-sizing: border-box;
+//     margin: 0;
+//     padding: 0;
+//   }
 
-  body {
-    margin: 0;
-    font-family: 'Inter', -apple-system, sans-serif;
-    background-color: ${({ theme }) => theme.background};
-    color: ${({ theme }) => theme.text};
-    transition: background-color 0.3s ease, color 0.3s ease;
-    min-height: 100vh;
-  }
+//   body {
+//     margin: 0;
+//     font-family: 'Inter', -apple-system, sans-serif;
+//     background-color: ${({ theme }) => theme.background};
+//     color: ${({ theme }) => theme.text};
+//     transition: background-color 0.3s ease, color 0.3s ease;
+//     min-height: 100vh;
+//   }
 
-  button {
-    font-family: 'Inter', -apple-system, sans-serif;
-    color: ${({ theme }) => theme.text};
-    transition: background-color 0.3s ease;
-    &:hover {
-      background-color: ${({ theme }) => theme.buttonHover};
-    }
-  }
-`;
+//   button {
+//     font-family: 'Inter', -apple-system, sans-serif;
+//     color: ${({ theme }) => theme.text};
+//     transition: background-color 0.3s ease;
+//     &:hover {
+//       background-color: ${({ theme }) => theme.buttonHover};
+//     }
+//   }
+// `;

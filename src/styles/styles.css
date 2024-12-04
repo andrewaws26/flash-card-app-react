@@ -4,6 +4,8 @@ body {
     position: relative; /* Added position relative */
 }
 
+/* Remove any background-color settings if present */
+
 .flashcard {
     background-color: #fff;
     border: 1px solid #ddd;

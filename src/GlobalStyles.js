@@ -1,5 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
+// Modify the GlobalStyles to correctly apply the theme background
+
 export const GlobalStyles = createGlobalStyle`
   /* Remove @import and use link tag in index.html instead */
   
@@ -36,6 +38,6 @@ export const GlobalStyles = createGlobalStyle`
   button:hover, .focus-button:hover {
     transform: translateY(-2px);
   }
-  }
-`;
+  
+  // ...existing code...
 `;

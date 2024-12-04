@@ -74,6 +74,19 @@ const MenuToggle = styled.button`
   }
 `;
 
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: ${({ isOpen }) => isOpen ? 1 : 0};
+  pointer-events: ${({ isOpen }) => isOpen ? 'auto' : 'none'};
+  transition: opacity 0.3s ease;
+  z-index: 999;
+`;
+
 function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -89,6 +102,7 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
 
   return (
     <>
+      <Overlay isOpen={isOpen} onClick={() => setIsOpen(false)} />
       <MenuToggle onClick={() => setIsOpen(!isOpen)} isOpen={isOpen}>
         {isOpen ? 'Close Menu' : 'Open Menu'}
       </MenuToggle>

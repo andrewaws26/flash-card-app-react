@@ -20,7 +20,7 @@ const Container = styled.div`
   `}
   min-height: 400px; // Ensure enough space for card and buttons
   position: relative;
-  padding-bottom: 2rem;
+  padding-bottom: ${({ isMobile }) => isMobile ? '120px' : '2rem'}; // Extra space for mobile buttons
 `;
 
 const SwipeInstructions = styled.div`
@@ -29,6 +29,11 @@ const SwipeInstructions = styled.div`
   font-size: 0.9rem;
   color: ${({ theme }) => theme.text};
   opacity: 0.8;
+  padding: 0.5rem;
+  background: ${({ theme }) => theme.surface};
+  border-radius: 0.5rem;
+  box-shadow: ${({ theme }) => theme.shadow};
+  margin-bottom: 2rem;
   
   @media (min-width: 768px) {
     display: none;
@@ -52,11 +57,27 @@ const FocusButton = styled.button`
 `;
 
 const FocusButtonContainer = styled.div`
-  position: fixed;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  
+  @media (max-width: 768px) {
+    position: fixed;
+    top: auto;
+    bottom: calc(100px + 1rem); // Position above the Know It/Don't Know It buttons
+    left: 50%;
+    transform: translateX(-50%);
+  }
+`;
+
+const ProgressIndicator = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.875rem;
+  color: ${({ theme }) => theme.text};
+  opacity: 0.8;
 `;
 
 function FlashcardContainer({ currentSection, onStatsUpdate }) {
@@ -68,6 +89,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [cardRevealed, setCardRevealed] = useState(false);
   const [loading, setLoading] = useState(false); // Add loading state
   const [focusMode, setFocusMode] = useState(false); // Add focus mode state
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const shuffleArray = (array) => {
     const newArray = [...array];
@@ -135,6 +157,12 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     );
   }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
 
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleKnowIt = () => {
     setCorrectAnswers(correctAnswers + 1);
     setCurrentCardIndex(currentCardIndex + 1);
@@ -159,7 +187,15 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   };
 
   return (
-    <Container focusMode={focusMode}>
+    <Container isMobile={isMobile} focusMode={focusMode}>
+      <FocusButtonContainer>
+        <FocusButton onClick={toggleFocusMode}>
+          {focusMode ? '✕' : '⛶'}
+        </FocusButton>
+      </FocusButtonContainer>
+      <ProgressIndicator>
+        {currentCardIndex + 1} of {flashcardsData.length}
+      </ProgressIndicator>
       <SwipeInstructions>
         After revealing the answer, swipe right if you know it, left if you don't.
       </SwipeInstructions>
@@ -179,12 +215,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
           focusMode={focusMode}
         />
       )}
-
-      <FocusButtonContainer>
-        <FocusButton onClick={toggleFocusMode}>
-          {focusMode ? 'Exit Focus Mode' : 'Enter Focus Mode'}
-        </FocusButton>
-      </FocusButtonContainer>
     </Container>
   );
 }

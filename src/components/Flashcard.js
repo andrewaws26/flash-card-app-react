@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useSwipeable } from 'react-swipeable';
 
 const FlashcardWrapper = styled.div`
   display: flex;
@@ -127,26 +128,122 @@ const ActionButton = styled.button`
   }
 `;
 
+const HintText = styled.small`
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: ${({ theme }) => theme.text};
+  opacity: 0.6;
+  font-size: 0.875rem;
+  transition: opacity 0.3s;
+`;
+
+const FlipIndicator = styled.div`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${({ theme }) => theme.accent};
+  opacity: 0.5;
+  font-size: 1.5rem;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const SwipeHint = styled.div`
+  position: absolute;
+  top: 50%;
+  ${({ direction }) => direction === 'left' ? 'left: 1rem;' : 'right: 1rem;'};
+  transform: translateY(-50%);
+  opacity: ${({ show }) => (show ? '0.5' : '0')};
+  transition: opacity 0.3s;
+  color: ${({ theme, direction }) => 
+    direction === 'left' ? theme.swipeLeft : theme.swipeRight};
+  font-size: 2rem;
+`;
+
+const CardContent = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+`;
+
 function Flashcard({ data, onKnowIt, onDontKnowIt }) {
   const [flipped, setFlipped] = useState(false);
+  const [swipeDirection, setSwipeDirection] = useState(null);
+  const [swipeAmount, setSwipeAmount] = useState(0);
 
   const handleFlip = () => {
     setFlipped(!flipped);
   };
 
+  const handlers = useSwipeable({
+    onSwiping: (eventData) => {
+      if (!flipped) return; // Only allow swipe when card is flipped
+      const amount = Math.abs(eventData.deltaX);
+      setSwipeAmount(Math.min(amount, 100));
+      setSwipeDirection(eventData.deltaX > 0 ? 'right' : 'left');
+    },
+    onSwipedLeft: () => {
+      if (flipped) {
+        onDontKnowIt();
+        setFlipped(false);
+      }
+    },
+    onSwipedRight: () => {
+      if (flipped) {
+        onKnowIt();
+        setFlipped(false);
+      }
+    },
+    onSwiped: () => {
+      setSwipeAmount(0);
+      setSwipeDirection(null);
+    },
+    trackMouse: false,
+    preventDefaultTouchmoveEvent: true,
+    delta: 10,
+    swipeThreshold: 40,
+  });
+
   return (
-    <FlashcardWrapper>
+    <FlashcardWrapper {...handlers}>
       <Card $flipped={flipped}>
         <CardInner $flipped={flipped} onClick={handleFlip}>
           <CardFront>
-            <Definition>{data.definition}</Definition>
-            {!flipped && <small>Tap to reveal the answer</small>}
+            <CardContent>
+              <Definition>{data.definition}</Definition>
+              <HintText>Tap to reveal answer</HintText>
+              <FlipIndicator>↻</FlipIndicator>
+            </CardContent>
           </CardFront>
           <CardBack>
-            <Term>{data.term}</Term>
-            {flipped && <small>Tap to go back</small>}
+            <CardContent>
+              <Term>{data.term}</Term>
+              <HintText>Tap to flip back</HintText>
+              <FlipIndicator>↻</FlipIndicator>
+            </CardContent>
           </CardBack>
         </CardInner>
+        {flipped && (
+          <>
+            <SwipeHint direction="left" show={swipeDirection === 'left'}>
+              ←
+            </SwipeHint>
+            <SwipeHint direction="right" show={swipeDirection === 'right'}>
+              →
+            </SwipeHint>
+          </>
+        )}
       </Card>
       <ButtonContainer>
         <ActionButton
@@ -154,6 +251,7 @@ function Flashcard({ data, onKnowIt, onDontKnowIt }) {
           onClick={(e) => {
             e.stopPropagation();
             onKnowIt();
+            setFlipped(false);
           }}
         >
           Know It
@@ -162,6 +260,7 @@ function Flashcard({ data, onKnowIt, onDontKnowIt }) {
           onClick={(e) => {
             e.stopPropagation();
             onDontKnowIt();
+            setFlipped(false);
           }}
         >
           Don't Know It

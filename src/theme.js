@@ -10,8 +10,8 @@ export const lightTheme = {
   error: '#ef4444',
   success: '#22c55e',
   border: '#e2e8f0',
-  shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-  hoverShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  shadow: '0 2px 4px rgba(0, 0, 0, 0.1)',       // Reduced shadow
+  hoverShadow: '0 4px 6px rgba(0, 0, 0, 0.15)', // Reduced shadow
   swipeRight: '#22c55e',
   swipeLeft: '#ef4444',
   buttonHover: '#e2e8f0',

@@ -7,11 +7,11 @@ const spin = keyframes`
 `;
 
 const SpinnerDiv = styled.div`
-  border: 8px solid ${({ theme }) => theme.border};
-  border-top: 8px solid ${({ theme }) => theme.accent};
+  border: 6px solid ${({ theme }) => theme.border};  // Reduced border width
+  border-top: 6px solid ${({ theme }) => theme.accent}; // Reduced border width
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  width: 40px;   // Reduced width
+  height: 40px;  // Reduced height
   animation: ${spin} 1s linear infinite;
 `;
 

@@ -18,15 +18,15 @@ const FlashcardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;  // Reduced gap
   width: 100%;
-  max-width: 800px; // Increased from 600px
-  padding: 1rem;
+  max-width: 600px; // Adjusted max-width
+  padding: 0.5rem;   // Reduced padding
   z-index: ${({ $focusMode }) => ($focusMode ? 1000 : 1)};
   position: relative;
 
   @media (min-width: 1200px) {
-    max-width: 1000px; // Even larger for big screens
+    max-width: 800px;
   }
 
   ${({ $focusMode }) => $focusMode && `
@@ -41,7 +41,7 @@ const FlashcardWrapper = styled.div`
     @media (min-width: 768px) {
       max-width: 90vw;
       max-height: 90vh;
-      padding: 2rem;
+      padding: 1rem;  // Adjusted padding for focus mode
     }
   `}
 `;

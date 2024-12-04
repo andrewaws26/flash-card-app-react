@@ -3,13 +3,26 @@ import styled from 'styled-components';
 
 const StatsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin: 2rem 0;
-  padding: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.5rem;
+  padding: 0.5rem;
   background: ${({ theme }) => theme.surface};
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   box-shadow: ${({ theme }) => theme.shadow};
+  position: fixed; /* Changed from sticky to fixed */
+  bottom: 1rem;     /* Position at the bottom with some margin */
+  right: 1rem;      /* Align to the right */
+  z-index: 1000;    /* Ensure it stays above other elements */
+  
+  @media (min-width: 1200px) {
+    top: 1rem;        /* Position at the top on larger screens */
+    bottom: auto;     
+    right: 1rem;      /* Maintain alignment to the right */
+    grid-template-columns: 1fr;
+    height: fit-content;
+    width: 150px;  
+    margin-left: 0;
+  }
 `;
 
 const StatItem = styled.div`

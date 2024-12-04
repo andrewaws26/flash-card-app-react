@@ -1,16 +1,16 @@
-
 import styled from 'styled-components';
 
 export const AppContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;  // Reduced padding
+  height: 100vh;  // Use full viewport height
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1rem;        // Reduced gap
 
   @media (min-width: 768px) {
-    grid-template-columns: 250px 1fr;
+    grid-template-columns: 200px 1fr;  // Adjust sidebar width
   }
 `;
 

@@ -34,8 +34,10 @@ const Container = styled.div`
       transform: scale(1.1); /* Add scaling for desktop */
     }
   `}
-  min-height: 400px;
-  padding: 1rem;
+  min-height: 300px;  // Reduced minimum height
+  padding: 0.5rem;     // Reduced padding
+  width: 100%;
+  max-width: none;
 `;
 
 const FocusButtonContainer = styled.div`

@@ -16,9 +16,9 @@ const ButtonGroupContainer = styled.div`
 const StyledButton = styled.button`
   background: ${({ active, theme }) => (active ? theme.accent : theme.surface)};
   color: ${({ active, theme }) => (active ? theme.surface : theme.text)};
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;  // Reduced padding
   border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 0.5rem;
+  border-radius: 0.4rem;     // Reduced border-radius
   cursor: pointer;
   font-weight: 500;
   width: 100%;
@@ -26,15 +26,15 @@ const StyledButton = styled.button`
   box-shadow: ${({ theme }) => theme.shadow};
 
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);  // Reduced translate
     box-shadow: ${({ theme }) => theme.hoverShadow};
   }
 
   @media (max-width: 767px) {
     width: auto;
     flex: 1 1 auto;
-    min-width: 100px;
-    max-width: 200px;
+    min-width: 80px;   // Reduced min-width
+    max-width: 150px;  // Reduced max-width
   }
 `;
 

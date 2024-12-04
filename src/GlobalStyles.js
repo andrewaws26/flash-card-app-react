@@ -6,13 +6,15 @@ export const GlobalStyles = createGlobalStyle`
   html, body {
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    height: 100%;  // Ensure full height
+    overflow: hidden;  // Prevent scrolling
     background-color: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
     transition: all 0.3s ease;
   }
 
   #root {
+    height: 100%;
     min-height: 100vh;
     background-color: ${({ theme }) => theme.background};
   }
@@ -34,4 +36,6 @@ export const GlobalStyles = createGlobalStyle`
   button:hover, .focus-button:hover {
     transform: translateY(-2px);
   }
+  }
+`;
 `;

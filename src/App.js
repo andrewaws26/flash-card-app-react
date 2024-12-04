@@ -20,6 +20,14 @@ const Header = styled.h1`
   }
 `;
 
+const ContentArea = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [currentSection, setCurrentSection] = useState('ch-one-study-guide.json');
@@ -76,15 +84,17 @@ function App() {
           />
         </Sidebar>
         <MainContent>
-          <Header>Anatomy Flashcards</Header>
+          <ContentArea>
+            <Header>Anatomy Flashcards</Header>
+            <FlashcardContainer 
+              currentSection={currentSection}
+              onStatsUpdate={handleStatsUpdate}
+            />
+          </ContentArea>
           <Counters 
             totalCards={totalCards}
             correctAnswers={correctAnswers}
             incorrectAnswers={incorrectAnswers}
-          />
-          <FlashcardContainer 
-            currentSection={currentSection}
-            onStatsUpdate={handleStatsUpdate}
           />
         </MainContent>
       </AppContainer>

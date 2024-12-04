@@ -85,6 +85,10 @@ const Overlay = styled.div`
   pointer-events: ${({ isOpen }) => isOpen ? 'auto' : 'none'};
   transition: opacity 0.3s ease;
   z-index: 999;
+
+  ${({ isOpen }) => isOpen && `
+    backdrop-filter: blur(5px);
+  `}
 `;
 
 function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {

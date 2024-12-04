@@ -2,6 +2,18 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSwipeable } from 'react-swipeable';
 
+// Add Backdrop component for focus mode
+const Backdrop = styled.div`
+  display: ${({ $focusMode }) => ($focusMode ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+`;
+
 const FlashcardWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -10,33 +22,65 @@ const FlashcardWrapper = styled.div`
   width: 100%;
   max-width: 800px; // Increased from 600px
   padding: 1rem;
+  z-index: ${({ $focusMode }) => ($focusMode ? 1000 : 1)};
+  position: relative;
 
   @media (min-width: 1200px) {
     max-width: 1000px; // Even larger for big screens
   }
+
+  ${({ $focusMode }) => $focusMode && `
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (min-width: 768px) {
+      max-width: 90vw;
+      max-height: 90vh;
+      padding: 2rem;
+    }
+  `}
 `;
 
 const Card = styled.div`
   width: 100%;
   perspective: 1000px;
-  margin-bottom: ${({ $flipped }) => ($flipped ? '4rem' : '0')};
-  min-height: 300px; // Increased minimum height
+  min-height: 300px;
+  margin-bottom: 0; // Remove margin change on flip
+  position: relative; // Add position relative
 
   @media (min-width: 768px) {
-    min-height: 400px; // Taller on desktop
+    min-height: 400px;
   }
+
+  ${({ $focusMode }) => $focusMode && `
+    height: 100%;
+    margin: 0;
+
+    @media (min-width: 768px) {
+      transform: scale(1.1);
+    }
+  `}
 `;
 
+// Update CardInner for vertical flip animation
 const CardInner = styled.div`
   position: relative;
   width: 100%;
+  height: 100%;
   transition: transform 0.6s;
   transform-style: preserve-3d;
-  transform: ${({ $flipped }) => ($flipped ? 'rotateY(180deg)' : 'none')};
+  transform: ${({ $flipped }) => ($flipped ? 'rotateX(180deg)' : 'rotateX(0deg)')};
   cursor: pointer;
-  min-height: 200px; // Ensure minimum height for content
+  min-height: 200px;
+  box-shadow: ${({ theme }) => theme.shadow};
 `;
 
+// Move CardFace definition above CardFront and CardBack
 const CardFace = styled.div`
   position: absolute;
   width: 100%;
@@ -44,23 +88,34 @@ const CardFace = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem; // Increased padding
+  padding: 2rem;
   border-radius: 1rem;
   background: ${({ theme }) => theme.surface};
-  box-shadow: ${({ theme }) => theme.shadow};
+  transition: background 0.3s ease;
 
   @media (min-width: 768px) {
     padding: 4rem; // More padding on desktop
   }
+
+  ${({ $focusMode }) => $focusMode && `
+    height: 100%;
+    
+    @media (max-width: 768px) {
+      border-radius: 0;
+    }
+  `}
 `;
 
+// Updated CardFront to use vertical flip animation
 const CardFront = styled(CardFace)`
-  // ...existing styles...
+  transform: rotateX(0deg);
+  backface-visibility: hidden;
 `;
 
+// Updated CardBack to use vertical flip animation
 const CardBack = styled(CardFace)`
-  transform: rotateY(180deg);
-  // ...existing styles...
+  transform: rotateX(180deg);
+  backface-visibility: hidden;
 `;
 
 const Definition = styled.p`
@@ -92,17 +147,19 @@ const ButtonContainer = styled.div`
   gap: 1rem;
   width: 100%;
   padding: 1rem;
-  position: relative;
+  position: fixed; // Change to fixed
+  bottom: 0; // Add bottom positioning
+  left: 0;
+  right: 0;
+  background: ${({ theme }) => theme.background};
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   z-index: 10;
 
-  @media (max-width: 768px) {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: ${({ theme }) => theme.background};
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
+  @media (min-width: 768px) {
+    position: absolute; // Use absolute on desktop
+    bottom: -5rem; // Position below card
+    background: transparent;
+    box-shadow: none;
   }
 `;
 
@@ -128,16 +185,8 @@ const ActionButton = styled.button`
   }
 `;
 
-const HintText = styled.small`
-  position: absolute;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  color: ${({ theme }) => theme.text};
-  opacity: 0.6;
-  font-size: 0.875rem;
-  transition: opacity 0.3s;
-`;
+// Remove the unused HintText component
+// const HintText = styled.small`...`;
 
 const FlipIndicator = styled.div`
   position: absolute;
@@ -177,10 +226,11 @@ const CardContent = styled.div`
   padding: 2rem;
 `;
 
-function Flashcard({ data, onKnowIt, onDontKnowIt }) {
+// Update the component to handle focus mode prop
+function Flashcard({ data, onKnowIt, onDontKnowIt, $focusMode }) {
   const [flipped, setFlipped] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState(null);
-  const [swipeAmount, setSwipeAmount] = useState(0);
+  // const [swipeAmount, setSwipeAmount] = useState(0); // Remove unused variable
 
   const handleFlip = () => {
     setFlipped(!flipped);
@@ -188,25 +238,17 @@ function Flashcard({ data, onKnowIt, onDontKnowIt }) {
 
   const handlers = useSwipeable({
     onSwiping: (eventData) => {
-      if (!flipped) return; // Only allow swipe when card is flipped
-      const amount = Math.abs(eventData.deltaX);
-      setSwipeAmount(Math.min(amount, 100));
       setSwipeDirection(eventData.deltaX > 0 ? 'right' : 'left');
     },
     onSwipedLeft: () => {
-      if (flipped) {
-        onDontKnowIt();
-        setFlipped(false);
-      }
+      onDontKnowIt();
+      setSwipeDirection(null);
     },
     onSwipedRight: () => {
-      if (flipped) {
-        onKnowIt();
-        setFlipped(false);
-      }
+      onKnowIt();
+      setSwipeDirection(null);
     },
     onSwiped: () => {
-      setSwipeAmount(0);
       setSwipeDirection(null);
     },
     trackMouse: false,
@@ -216,57 +258,58 @@ function Flashcard({ data, onKnowIt, onDontKnowIt }) {
   });
 
   return (
-    <FlashcardWrapper {...handlers}>
-      <Card $flipped={flipped}>
-        <CardInner $flipped={flipped} onClick={handleFlip}>
-          <CardFront>
-            <CardContent>
-              <Definition>{data.definition}</Definition>
-              <HintText>Tap to reveal answer</HintText>
-              <FlipIndicator>↻</FlipIndicator>
-            </CardContent>
-          </CardFront>
-          <CardBack>
-            <CardContent>
-              <Term>{data.term}</Term>
-              <HintText>Tap to flip back</HintText>
-              <FlipIndicator>↻</FlipIndicator>
-            </CardContent>
-          </CardBack>
-        </CardInner>
-        {flipped && (
-          <>
-            <SwipeHint direction="left" show={swipeDirection === 'left'}>
-              ←
-            </SwipeHint>
-            <SwipeHint direction="right" show={swipeDirection === 'right'}>
-              →
-            </SwipeHint>
-          </>
-        )}
-      </Card>
-      <ButtonContainer>
-        <ActionButton
-          $correct
-          onClick={(e) => {
-            e.stopPropagation();
-            onKnowIt();
-            setFlipped(false);
-          }}
-        >
-          Know It
-        </ActionButton>
-        <ActionButton
-          onClick={(e) => {
-            e.stopPropagation();
-            onDontKnowIt();
-            setFlipped(false);
-          }}
-        >
-          Don't Know It
-        </ActionButton>
-      </ButtonContainer>
-    </FlashcardWrapper>
+    <>
+      <Backdrop $focusMode={$focusMode} />
+      <FlashcardWrapper {...handlers} $focusMode={$focusMode}>
+        <Card $flipped={flipped} $focusMode={$focusMode}>
+          <CardInner
+            $flipped={flipped}
+            onClick={handleFlip}
+          >
+            <CardFront $focusMode={$focusMode}>
+              <CardContent>
+                <Definition>{data.definition}</Definition>
+                <FlipIndicator>↻</FlipIndicator>
+              </CardContent>
+            </CardFront>
+            <CardBack $focusMode={$focusMode}>
+              <CardContent>
+                <Term>{data.term}</Term>
+                <FlipIndicator>↻</FlipIndicator>
+              </CardContent>
+            </CardBack>
+          </CardInner>
+          {swipeDirection && (
+            <>
+              <SwipeHint direction={swipeDirection} show={true}>
+                {swipeDirection === 'left' ? '←' : '→'}
+              </SwipeHint>
+            </>
+          )}
+        </Card>
+        <ButtonContainer>
+          <ActionButton
+            $correct
+            onClick={(e) => {
+              e.stopPropagation();
+              onKnowIt();
+              setSwipeDirection(null);
+            }}
+          >
+            Know It
+          </ActionButton>
+          <ActionButton
+            onClick={(e) => {
+              e.stopPropagation();
+              onDontKnowIt();
+              setSwipeDirection(null);
+            }}
+          >
+            Don't Know It
+          </ActionButton>
+        </ButtonContainer>
+      </FlashcardWrapper>
+    </>
   );
 }
 

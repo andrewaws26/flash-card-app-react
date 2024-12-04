@@ -3,15 +3,15 @@ import { createGlobalStyle } from 'styled-components';
 export const lightTheme = {
   primary: '#ffffff',
   secondary: '#6366f1',
-  background: '#f8fafc',
+  background: '#f0f4f8', // Slightly lighter for better contrast
   text: '#1e293b',
   accent: '#4f46e5',
   surface: '#ffffff',
   error: '#ef4444',
   success: '#22c55e',
   border: '#e2e8f0',
-  shadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-  hoverShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+  shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+  hoverShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
   swipeRight: '#22c55e',
   swipeLeft: '#ef4444',
   buttonHover: '#e2e8f0',
@@ -20,15 +20,15 @@ export const lightTheme = {
 export const darkTheme = {
   primary: '#1e293b',
   secondary: '#818cf8',
-  background: '#0f172a',    // Darker background
+  background: '#0f172a',
   text: '#f8fafc',
   accent: '#6366f1',
-  surface: '#1e293b',       // Slightly lighter than background
-  error: '#ef4444',
-  success: '#22c55e',      // Success color for "Know It" button
+  surface: '#1f2937',
+  error: '#f87171',
+  success: '#4ade80',
   border: '#334155',
-  shadow: '0 4px 6px -1px rgb(0 0 0 / 0.3)',
-  hoverShadow: '0 10px 15px -3px rgb(0 0 0 / 0.3)',
+  shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+  hoverShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)',
   swipeRight: '#4ade80',
   swipeLeft: '#f87171',
   buttonHover: '#4b5563',

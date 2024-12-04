@@ -1,73 +1,90 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Flashcard from './Flashcard';
 import styled from 'styled-components';
-import Spinner from './Spinner'; // Correct import path
+import Spinner from './Spinner';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; // Center content vertically
-  ${({ focusMode }) => focusMode && `
+  justify-content: center;
+  transition: all 0.3s ease;
+  ${({ $focusMode }) => $focusMode && `
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100vw;
+    height: 100vh;
     background: ${({ theme }) => theme.background};
     z-index: 1000;
-    padding: 1rem;
+    padding: 0;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    @media (min-width: 768px) {
+      width: 80vw;
+      height: 80vh;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: ${({ theme }) => theme.shadow};
+      transform: scale(1.1); /* Add scaling for desktop */
+    }
   `}
-  min-height: 400px; // Ensure enough space for card and buttons
-  position: relative;
-  padding-bottom: ${({ isMobile }) => isMobile ? '120px' : '2rem'}; // Extra space for mobile buttons
+  min-height: 400px;
+  padding: 1rem;
+`;
+
+const FocusButtonContainer = styled.div`
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1001;
+  transition: transform 0.3s ease;
+  transform: ${({ $focusMode }) => $focusMode ? 'scale(1.2)' : 'scale(1)'};
+
+  @media (max-width: 768px) {
+    bottom: calc(100px + 1rem);
+    right: 1rem;
+  }
+`;
+
+const FocusButton = styled.button`
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.accent};
+  color: ${({ theme }) => theme.surface};
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: ${({ theme }) => theme.shadow};
+  transition: transform 0.3s ease, background 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    background: ${({ theme }) => theme.secondary};
+  }
 `;
 
 const SwipeInstructions = styled.div`
   text-align: center;
   margin: 1rem 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.text};
-  opacity: 0.8;
+  opacity: 0.9;
   padding: 0.5rem;
   background: ${({ theme }) => theme.surface};
   border-radius: 0.5rem;
-  box-shadow: ${({ theme }) => theme.shadow};
-  margin-bottom: 2rem;
-  
-  @media (min-width: 768px) {
-    display: none;
-  }
-`;
 
-const FocusButton = styled.button`
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background: ${({ theme }) => theme.accent};
-  color: ${({ theme }) => theme.surface};
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
-
-  &:hover {
-    background: ${({ theme }) => theme.secondary};
-  }
-`;
-
-const FocusButtonContainer = styled.div`
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 10;
-  
   @media (max-width: 768px) {
-    position: fixed;
-    top: auto;
-    bottom: calc(100px + 1rem); // Position above the Know It/Don't Know It buttons
-    left: 50%;
-    transform: translateX(-50%);
+    font-size: 0.85rem;
   }
 `;
 
@@ -87,8 +104,8 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [missedCards, setMissedCards] = useState([]);
   const [cardRevealed, setCardRevealed] = useState(false);
-  const [loading, setLoading] = useState(false); // Add loading state
-  const [focusMode, setFocusMode] = useState(false); // Add focus mode state
+  const [loading, setLoading] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const shuffleArray = (array) => {
@@ -101,60 +118,30 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   };
 
   const loadFlashcards = useCallback(async (section) => {
-    setLoading(true); // Set loading to true
-    console.log('loadFlashcards called with section:', section);
+    setLoading(true);
     try {
       const response = await fetch(`${process.env.PUBLIC_URL}/data/${section}`);
-      console.log('Fetch response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
-      console.log('Loaded flashcards count:', data.length);
-      
-      const shuffledData = shuffleArray(data);
-      console.log('Data shuffled, first card:', shuffledData[0]);
-      
-      setFlashcardsData(shuffledData);
+      setFlashcardsData(shuffleArray(data));
       setCurrentCardIndex(0);
       setCorrectAnswers(0);
       setIncorrectAnswers(0);
       setMissedCards([]);
       setCardRevealed(false);
-      
-      console.log('State reset complete');
     } catch (error) {
-      console.error('Error in loadFlashcards:', error);
+      console.error('Error loading flashcards:', error);
     } finally {
-      setLoading(false); // Set loading to false
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    console.log('FlashcardContainer: currentSection changed to:', currentSection);
-    if (!currentSection) {
-      console.log('Empty section detected, resetting state');
-      setFlashcardsData([]);
-      setCurrentCardIndex(0);
-      setCorrectAnswers(0);
-      setIncorrectAnswers(0);
-      setMissedCards([]);
-      setCardRevealed(false);
-      return;
-    }
-    console.log('Loading flashcards for section:', currentSection);
-    loadFlashcards(currentSection);
+    if (currentSection) loadFlashcards(currentSection);
   }, [currentSection, loadFlashcards]);
 
   useEffect(() => {
-    // Update parent component with stats whenever they change
-    onStatsUpdate(
-      flashcardsData.length,
-      correctAnswers,
-      incorrectAnswers
-    );
+    onStatsUpdate(flashcardsData.length, correctAnswers, incorrectAnswers);
   }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
 
   useEffect(() => {
@@ -176,33 +163,27 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     setCardRevealed(false);
   };
 
-  const handleCardClick = () => {
-    if (!cardRevealed) {
-      setCardRevealed(true);
-    }
-  };
-
-  const toggleFocusMode = () => {
-    setFocusMode(!focusMode);
-  };
+  const toggleFocusMode = () => setFocusMode(!focusMode);
 
   return (
-    <Container isMobile={isMobile} focusMode={focusMode}>
+    <Container $isMobile={isMobile} $focusMode={focusMode}>
       <FocusButtonContainer>
         <FocusButton onClick={toggleFocusMode}>
-          {focusMode ? '✕' : '⛶'}
+          {focusMode ? '−' : '+'}
         </FocusButton>
       </FocusButtonContainer>
       <ProgressIndicator>
         {currentCardIndex + 1} of {flashcardsData.length}
       </ProgressIndicator>
-      <SwipeInstructions>
-        After revealing the answer, swipe right if you know it, left if you don't.
-      </SwipeInstructions>
+      {isMobile && (
+        <SwipeInstructions>
+          After revealing the answer, swipe right if you know it, left if you don't.
+        </SwipeInstructions>
+      )}
       {loading ? (
         <Spinner />
       ) : flashcardsData.length === 0 ? (
-        <div>Loading flashcards...</div>
+        <div>No flashcards found. Please try again.</div>
       ) : currentCardIndex >= flashcardsData.length ? (
         <div>All cards completed! Click Reset to start over.</div>
       ) : (
@@ -210,9 +191,8 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
           data={flashcardsData[currentCardIndex]}
           onKnowIt={handleKnowIt}
           onDontKnowIt={handleDontKnowIt}
-          onCardClick={handleCardClick}
           cardRevealed={cardRevealed}
-          focusMode={focusMode}
+          onCardClick={() => setCardRevealed(!cardRevealed)}
         />
       )}
     </Container>

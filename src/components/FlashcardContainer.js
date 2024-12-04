@@ -105,7 +105,8 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [missedCards, setMissedCards] = useState([]);
-  const [cardRevealed, setCardRevealed] = useState(false);
+  // Remove the cardRevealed state
+  // const [cardRevealed, setCardRevealed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -130,7 +131,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
       setCorrectAnswers(0);
       setIncorrectAnswers(0);
       setMissedCards([]);
-      setCardRevealed(false);
+      // setCardRevealed(false);
     } catch (error) {
       console.error('Error loading flashcards:', error);
     } finally {
@@ -155,14 +156,14 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const handleKnowIt = () => {
     setCorrectAnswers(correctAnswers + 1);
     setCurrentCardIndex(currentCardIndex + 1);
-    setCardRevealed(false);
+    // setCardRevealed(false);
   };
 
   const handleDontKnowIt = () => {
     setIncorrectAnswers(incorrectAnswers + 1);
     setMissedCards([...missedCards, flashcardsData[currentCardIndex]]);
     setCurrentCardIndex(currentCardIndex + 1);
-    setCardRevealed(false);
+    // setCardRevealed(false);
   };
 
   const toggleFocusMode = () => setFocusMode(!focusMode);
@@ -190,11 +191,10 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
         <div>All cards completed! Click Reset to start over.</div>
       ) : (
         <Flashcard
+          key={currentCardIndex} // Add unique key to reset Flashcard state
           data={flashcardsData[currentCardIndex]}
           onKnowIt={handleKnowIt}
           onDontKnowIt={handleDontKnowIt}
-          cardRevealed={cardRevealed}
-          onCardClick={() => setCardRevealed(!cardRevealed)}
         />
       )}
     </Container>

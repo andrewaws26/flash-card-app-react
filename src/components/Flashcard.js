@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Added useEffect import
 import styled from 'styled-components';
 import { useSwipeable } from 'react-swipeable';
 
@@ -22,6 +22,7 @@ const FlashcardWrapper = styled.div`
   width: 100%;
   max-width: 600px; // Adjusted max-width
   padding: 0.5rem;   // Reduced padding
+  background: ${({ theme }) => theme.surface}; // Set background color to match desired color
   z-index: ${({ $focusMode }) => ($focusMode ? 1000 : 1)};
   position: relative;
 
@@ -84,13 +85,15 @@ const CardInner = styled.div`
 const CardFace = styled.div`
   position: absolute;
   width: 100%;
+  height: 100%; // Ensure full height coverage
   backface-visibility: hidden;
   display: flex;
+  flex-direction: column; // Added flex direction
   align-items: center;
   justify-content: center;
   padding: 2rem;
   border-radius: 1rem;
-  background: ${({ theme }) => theme.surface};
+  background: ${({ theme }) => theme.surface}; // Use theme.surface for consistent card color
   transition: background 0.3s ease;
 
   @media (min-width: 768px) {
@@ -166,7 +169,7 @@ const ButtonContainer = styled.div`
 const ActionButton = styled.button`
   flex: 1;
   max-width: 200px;
-  background: ${({ $correct, theme }) => $correct ? theme.success : theme.accent};
+  background: ${({ $correct, theme }) => $correct ? theme.success : theme.error}; // Changed from theme.accent to theme.error
   color: white;
   border: none;
   padding: 1rem;
@@ -177,7 +180,7 @@ const ActionButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-    background: ${({ $correct, theme }) => $correct ? theme.success : theme.secondary};
+    background: ${({ $correct, theme }) => $correct ? theme.success : theme.error}; // Changed from theme.secondary to theme.error
   }
 
   @media (max-width: 768px) {
@@ -230,7 +233,10 @@ const CardContent = styled.div`
 function Flashcard({ data, onKnowIt, onDontKnowIt, $focusMode }) {
   const [flipped, setFlipped] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState(null);
-  // const [swipeAmount, setSwipeAmount] = useState(0); // Remove unused variable
+
+  useEffect(() => {
+    setFlipped(false); // Ensure the question side is shown when a new card is loaded
+  }, [data]);
 
   const handleFlip = () => {
     setFlipped(!flipped);
@@ -275,7 +281,7 @@ function Flashcard({ data, onKnowIt, onDontKnowIt, $focusMode }) {
             <CardBack $focusMode={$focusMode}>
               <CardContent>
                 <Term>{data.term}</Term>
-                <FlipIndicator>↻</FlipIndicator>
+                <FlipIndicator>↻</FlipIndicator> {/* Corrected closing tag */}
               </CardContent>
             </CardBack>
           </CardInner>

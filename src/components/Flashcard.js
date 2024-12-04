@@ -7,14 +7,23 @@ const FlashcardWrapper = styled.div`
   align-items: center;
   gap: 2rem;
   width: 100%;
-  max-width: 600px;
+  max-width: 800px; // Increased from 600px
   padding: 1rem;
+
+  @media (min-width: 1200px) {
+    max-width: 1000px; // Even larger for big screens
+  }
 `;
 
 const Card = styled.div`
   width: 100%;
   perspective: 1000px;
   margin-bottom: ${({ $flipped }) => ($flipped ? '4rem' : '0')};
+  min-height: 300px; // Increased minimum height
+
+  @media (min-width: 768px) {
+    min-height: 400px; // Taller on desktop
+  }
 `;
 
 const CardInner = styled.div`
@@ -34,10 +43,14 @@ const CardFace = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 3rem; // Increased padding
   border-radius: 1rem;
   background: ${({ theme }) => theme.surface};
   box-shadow: ${({ theme }) => theme.shadow};
+
+  @media (min-width: 768px) {
+    padding: 4rem; // More padding on desktop
+  }
 `;
 
 const CardFront = styled(CardFace)`
@@ -50,18 +63,26 @@ const CardBack = styled(CardFace)`
 `;
 
 const Definition = styled.p`
-  font-size: 1.25rem;
+  font-size: 1.5rem; // Increased font size
   line-height: 1.6;
   margin-bottom: 1.5rem;
   text-align: center;
+
+  @media (min-width: 768px) {
+    font-size: 1.75rem; // Larger text on desktop
+  }
 `;
 
 const Term = styled.h2`
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 600;
   margin: 1.5rem 0;
   color: ${({ theme }) => theme.accent};
   text-align: center;
+
+  @media (min-width: 768px) {
+    font-size: 2rem; // Larger text on desktop
+  }
 `;
 
 const ButtonContainer = styled.div`

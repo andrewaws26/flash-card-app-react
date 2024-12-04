@@ -5,7 +5,7 @@ export const GlobalStyles = createGlobalStyle`
 
   body {
     font-family: 'Inter', sans-serif;
-    background-color: ${({ theme }) => theme.background};
+    background-color: ${({ theme }) => theme.background};  // Ensure this uses the theme background
     color: ${({ theme }) => theme.text};
     margin: 0;
     padding: 0;

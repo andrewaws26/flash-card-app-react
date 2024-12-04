@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ThemeProvider } from 'styled-components';
+import React, { useState, useContext } from 'react';
+import { ThemeProvider, ThemeContext } from 'styled-components';
 import { lightTheme, darkTheme, GlobalStyle } from './theme';
 import ButtonGroup from './components/ButtonGroup';
 import Counters from './components/Counters';
@@ -22,6 +22,7 @@ const Header = styled.h1`
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const theme = useContext(ThemeContext);
   const [currentSection, setCurrentSection] = useState('ch-one-study-guide.json');
   const [totalCards, setTotalCards] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);

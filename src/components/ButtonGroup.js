@@ -38,8 +38,44 @@ const StyledButton = styled.button`
   }
 `;
 
+const SidebarContainer = styled.div`
+  background: ${({ theme }) => theme.surface};
+  padding: 2rem 1rem;
+  width: 250px;
+  min-height: 100vh;
+  position: fixed;
+  left: ${({ isOpen }) => (isOpen ? '0' : '-250px')};
+  top: 0;
+  transition: left 0.3s ease;
+  box-shadow: ${({ theme }) => theme.shadow};
+  z-index: 1000;
+
+  @media (max-width: 768px) {
+    width: 200px;
+    left: ${({ isOpen }) => (isOpen ? '0' : '-200px')};
+  }
+`;
+
+const MenuToggle = styled.button`
+  background: ${({ theme }) => theme.accent};
+  color: ${({ theme }) => theme.surface};
+  position: fixed;
+  top: 1rem;
+  left: ${({ isOpen }) => (isOpen ? '250px' : '1rem')};
+  transition: left 0.3s ease;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  z-index: 1001;
+
+  @media (max-width: 768px) {
+    left: ${({ isOpen }) => (isOpen ? '200px' : '1rem')};
+  }
+`;
+
 function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
-  const [menuExpanded, setMenuExpanded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const sections = [
     { label: 'Ch 1 Study Guide', value: 'ch-one-study-guide.json' },
@@ -51,33 +87,30 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
     { label: 'Lab 12', value: 'flashcards-lab-twelve.json' },
   ];
 
-  const toggleMenu = () => {
-    setMenuExpanded(!menuExpanded);
-    document.getElementById('button-container').classList.toggle('expanded');
-  };
-
   return (
-    <div id="button-container">
-      <ButtonGroupContainer>
-        <StyledButton className="toggle-menu-button" onClick={toggleMenu}>
-          {menuExpanded ? 'Collapse Menu' : 'Expand Menu'}
-        </StyledButton>
-        <StyledButton onClick={onToggleDarkMode}>
-          Toggle Dark Mode
-        </StyledButton>
-        <StyledButton onClick={onReset}>
-          Reset
-        </StyledButton>
-        {sections.map((section) => (
-          <StyledButton
-            key={section.value}
-            onClick={() => onSectionChange(section.value)}
-          >
-            {section.label}
+    <>
+      <MenuToggle onClick={() => setIsOpen(!isOpen)} isOpen={isOpen}>
+        {isOpen ? 'Close Menu' : 'Open Menu'}
+      </MenuToggle>
+      <SidebarContainer isOpen={isOpen}>
+        <ButtonGroupContainer>
+          <StyledButton onClick={onToggleDarkMode}>
+            Toggle Dark Mode
           </StyledButton>
-        ))}
-      </ButtonGroupContainer>
-    </div>
+          <StyledButton onClick={onReset}>
+            Reset
+          </StyledButton>
+          {sections.map((section) => (
+            <StyledButton
+              key={section.value}
+              onClick={() => onSectionChange(section.value)}
+            >
+              {section.label}
+            </StyledButton>
+          ))}
+        </ButtonGroupContainer>
+      </SidebarContainer>
+    </>
   );
 }
 

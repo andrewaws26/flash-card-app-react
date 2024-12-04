@@ -7,6 +7,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; // Center content vertically
   ${({ focusMode }) => focusMode && `
     position: fixed;
     top: 0;
@@ -17,8 +18,9 @@ const Container = styled.div`
     z-index: 1000;
     padding: 1rem;
   `}
-    justify-content: center; // Center content vertically
-  `}
+  min-height: 400px; // Ensure enough space for card and buttons
+  position: relative;
+  padding-bottom: 2rem;
 `;
 
 const SwipeInstructions = styled.div`
@@ -49,13 +51,16 @@ const FocusButton = styled.button`
   }
 `;
 
+const FocusButtonContainer = styled.div`
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+`;
+
 function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [flashcardsData, setFlashcardsData] = useState([]);
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
-  const [missedCards, setMissedCards] = useState([]);
-  const [cardRevealed, setCardRevealed] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
@@ -159,32 +164,28 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
         After revealing the answer, swipe right if you know it, left if you don't.
       </SwipeInstructions>
       {loading ? (
-        <Spinner /> // Show spinner when loading
+        <Spinner />
       ) : flashcardsData.length === 0 ? (
         <div>Loading flashcards...</div>
-            data={flashcardsData[currentCardIndex]}
-            onKnowIt={handleKnowIt}
-            onDontKnowIt={handleDontKnowIt}
-            onCardClick={handleCardClick}
-            cardRevealed={cardRevealed}
-            focusMode={focusMode}
-          />
-            onDontKnowIt={handleDontKnowIt}
-            onCardClick={handleCardClick}
-            cardRevealed={cardRevealed}
-            focusMode={focusMode}
-          />
-    </Container>
-        </FlashcardWrapper>
+      ) : currentCardIndex >= flashcardsData.length ? (
+        <div>All cards completed! Click Reset to start over.</div>
+      ) : (
+        <Flashcard
+          data={flashcardsData[currentCardIndex]}
+          onKnowIt={handleKnowIt}
+          onDontKnowIt={handleDontKnowIt}
+          onCardClick={handleCardClick}
+          cardRevealed={cardRevealed}
+          focusMode={focusMode}
+        />
       )}
-      <FocusButton onClick={toggleFocusMode}>
-        {focusMode ? 'Exit Focus Mode' : 'Enter Focus Mode'}
-      </FocusButton>
-    </Container>
-  );
-}
 
-export default FlashcardContainer;
+      <FocusButtonContainer>
+        <FocusButton onClick={toggleFocusMode}>
+          {focusMode ? 'Exit Focus Mode' : 'Enter Focus Mode'}
+        </FocusButton>
+      </FocusButtonContainer>
+    </Container>
   );
 }
 

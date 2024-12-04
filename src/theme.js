@@ -20,12 +20,12 @@ export const lightTheme = {
 export const darkTheme = {
   primary: '#1e293b',
   secondary: '#818cf8',
-  background: '#0f172a',
+  background: '#0f172a',    // Darker background
   text: '#f8fafc',
   accent: '#6366f1',
-  surface: '#1e293b',
+  surface: '#1e293b',       // Slightly lighter than background
   error: '#ef4444',
-  success: '#22c55e',
+  success: '#22c55e',      // Success color for "Know It" button
   border: '#334155',
   shadow: '0 4px 6px -1px rgb(0 0 0 / 0.3)',
   hoverShadow: '0 10px 15px -3px rgb(0 0 0 / 0.3)',
@@ -48,7 +48,7 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Inter', -apple-system, sans-serif;
     background-color: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
     min-height: 100vh;
   }
 

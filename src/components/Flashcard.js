@@ -25,6 +25,10 @@ const FlashcardWrapper = styled.div`
   background: ${({ theme }) => theme.surface}; // Set background color to match desired color
   z-index: ${({ $focusMode }) => ($focusMode ? 1000 : 1)};
   position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 
   @media (min-width: 1200px) {
     max-width: 800px;
@@ -126,6 +130,10 @@ const Definition = styled.p`
   line-height: 1.6;
   margin-bottom: 1.5rem;
   text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 
   @media (min-width: 768px) {
     font-size: 1.75rem; // Larger text on desktop
@@ -138,6 +146,10 @@ const Term = styled.h2`
   margin: 1.5rem 0;
   color: ${({ theme }) => theme.accent};
   text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 
   @media (min-width: 768px) {
     font-size: 2rem; // Larger text on desktop
@@ -164,6 +176,14 @@ const ButtonContainer = styled.div`
     background: transparent;
     box-shadow: none;
   }
+
+  ${({ $focusMode }) => $focusMode && `
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+    background: transparent;
+  `}
 `;
 
 const ActionButton = styled.button`
@@ -215,6 +235,11 @@ const SwipeHint = styled.div`
   color: ${({ theme, direction }) => 
     direction === 'left' ? theme.swipeLeft : theme.swipeRight};
   font-size: 2rem;
+  
+  @media (min-width: 768px) {
+    font-size: 3rem;
+    opacity: ${({ show }) => (show ? '0.3' : '0')};
+  }
 `;
 
 const CardContent = styled.div`
@@ -227,6 +252,10 @@ const CardContent = styled.div`
   align-items: center;
   gap: 1rem;
   padding: 2rem;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 `;
 
 // Update the component to handle focus mode prop
@@ -257,15 +286,31 @@ function Flashcard({ data, onKnowIt, onDontKnowIt, $focusMode }) {
     onSwiped: () => {
       setSwipeDirection(null);
     },
-    trackMouse: false,
+    trackMouse: true, // Enable mouse tracking for desktop
     preventDefaultTouchmoveEvent: true,
     delta: 10,
     swipeThreshold: 40,
   });
 
+  // Add keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (flipped) {
+        if (e.key === 'ArrowLeft') {
+          onDontKnowIt();
+        } else if (e.key === 'ArrowRight') {
+          onKnowIt();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [flipped, onKnowIt, onDontKnowIt]);
+
   return (
     <>
-      <Backdrop $focusMode={$focusMode} />
+      <Backdrop $focusMode={$focusMode} onClick={() => setFlipped(false)} />
       <FlashcardWrapper {...handlers} $focusMode={$focusMode}>
         <Card $flipped={flipped} $focusMode={$focusMode}>
           <CardInner
@@ -293,7 +338,7 @@ function Flashcard({ data, onKnowIt, onDontKnowIt, $focusMode }) {
             </>
           )}
         </Card>
-        <ButtonContainer>
+        <ButtonContainer $focusMode={$focusMode}>
           <ActionButton
             $correct
             onClick={(e) => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Flashcard from './Flashcard';
 import styled from 'styled-components';
 import Spinner from './Spinner';
+import Counters from './Counters';  // Verify this import path is correct
 
 const Container = styled.div`
   display: flex;
@@ -13,26 +14,15 @@ const Container = styled.div`
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: ${({ theme }) => theme.background};
     z-index: 1000;
-    padding: 0;
-    overflow: hidden;
-
+    padding: 1rem;
+    overflow-y: auto;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-
-    @media (min-width: 768px) {
-      width: 80vw;
-      height: 80vh;
-      margin: auto;
-      border-radius: 10px;
-      box-shadow: ${({ theme }) => theme.shadow};
-      transform: scale(1.1); /* Add scaling for desktop */
-    }
+    justify-content: center;
   `}
   min-height: 300px;  // Reduced minimum height
   padding: 0.5rem;     // Reduced padding
@@ -42,15 +32,15 @@ const Container = styled.div`
 
 const FocusButtonContainer = styled.div`
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: calc(100px + 1rem);
+  right: 1rem;
   z-index: 1001;
   transition: transform 0.3s ease;
   transform: ${({ $focusMode }) => $focusMode ? 'scale(1.2)' : 'scale(1)'};
 
-  @media (max-width: 768px) {
-    bottom: calc(100px + 1rem);
-    right: 1rem;
+  @media (min-width: 769px) {
+    bottom: 2rem;
+    right: 2rem;
   }
 `;
 
@@ -62,12 +52,23 @@ const FocusButton = styled.button`
   color: ${({ theme }) => theme.surface};
   border: none;
   cursor: pointer;
-  font-size: 1.25rem;
+  font-size: 1.75rem; // Increased font size for symbol
+  padding: 0; // Remove padding to center the symbol
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: ${({ theme }) => theme.shadow};
   transition: transform 0.3s ease, background 0.3s ease;
+  line-height: 1;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-1px); // Fine-tune symbol vertical alignment
+  }
 
   &:hover {
     transform: scale(1.1);
@@ -170,9 +171,9 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
 
   return (
     <Container $isMobile={isMobile} $focusMode={focusMode}>
-      <FocusButtonContainer>
+      <FocusButtonContainer $focusMode={focusMode}>
         <FocusButton onClick={toggleFocusMode}>
-          {focusMode ? '−' : '+'}
+          <span>{focusMode ? '⇲' : '⇱'}</span>
         </FocusButton>
       </FocusButtonContainer>
       <ProgressIndicator>
@@ -183,6 +184,12 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
           After revealing the answer, swipe right if you know it, left if you don't.
         </SwipeInstructions>
       )}
+      <Counters 
+        totalCards={flashcardsData.length}
+        correctAnswers={correctAnswers}
+        incorrectAnswers={incorrectAnswers}
+        $focusMode={focusMode}
+      />
       {loading ? (
         <Spinner />
       ) : flashcardsData.length === 0 ? (
@@ -195,6 +202,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
           data={flashcardsData[currentCardIndex]}
           onKnowIt={handleKnowIt}
           onDontKnowIt={handleDontKnowIt}
+          $focusMode={focusMode}  // Pass the focusMode prop to Flashcard
         />
       )}
     </Container>

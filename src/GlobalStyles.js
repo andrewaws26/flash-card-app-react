@@ -9,7 +9,7 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
     height: 100%;  // Ensure full height
-    overflow: hidden;  // Prevent scrolling
+    overflow: auto;  // Allow scrolling in focus mode
     background-color: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
     transition: all 0.3s ease;
@@ -23,7 +23,9 @@ export const GlobalStyles = createGlobalStyle`
 
   body {
     font-family: 'Inter', sans-serif;
-    background-color: ${({ theme }) => theme.background};  // Ensure this uses the theme background
+    ${({ theme }) => `
+      background-color: ${theme.background};
+    `}
     color: ${({ theme }) => theme.text};
     margin: 0;
     padding: 0;

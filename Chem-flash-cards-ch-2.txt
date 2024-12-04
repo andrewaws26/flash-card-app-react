@@ -1,0 +1,58 @@
+For d-block elements, the outermost principal energy level is the period number minus 1.
+D-block Elements Energy Level
+
+Each orbital can hold a maximum of 2 electrons. Therefore, s can hold 2, p can hold 6, d can hold 10, and f can hold 14 electrons.
+Maximum Electrons in Each Subshell
+
+Electrons are arranged in fixed energy levels (n) around the nucleus. Only worked for the hydrogen atom.
+Niels Bohr's Atomic Model
+
+An orbital can hold a maximum of 2 electrons.
+Maximum Electrons in an Orbital
+
+
+The number of subshells corresponds to the principal energy level (n). For n=1, there is 1 subshell; for n=2, there are 2 subshells, etc.
+Number of Subshells per Energy Level
+
+The speed of light is 3.0 x 10^8 meters per second.
+Speed of Light
+
+
+The periodic table consists of 18 groups or families.
+Group Families of the Periodic Table
+
+Excitation (endothermic) absorbs energy, and relaxation (exothermic) releases energy, causing electron transitions between levels.
+Excitation and Relaxation Process
+
+Lothar Meyer and Dmitriv Mendeleev organized the first periodic table based on increasing atomic mass.
+Meyer & Mendeleev
+
+Atoms of the same eulement that have the same number of protons but different number of neutrons.
+Isotopes
+
+Proposed that atoms are indivisible particles that combine in simple whole-number ratios to form compounds.
+John Dalton's Atomic Theory
+
+If you have more than one orbital with the same energy, you cannot pair electrons until you have one in each orbital.
+Pauli's Exclusion Principle
+
+
+The periodic table consists of 7 horizontal rows called periods.
+Periods of the Periodic Table
+
+Elements in the bottom two rows, called inner transition metals (lanthanides and actinides).
+Inner Transition Elements
+
+Atoms of a particular element have identical properties (false in the case of isotopes).
+Atoms of a Particular Element
+
+For electrons to occupy the same orbital, they must have opposite spins.
+Hund's Rule
+
+For f-block elements, the outermost principal energy level is the period number minus 2.
+F-block Elements Energy Level
+
+Each subshell can hold a specific number of orbitals: s=1, p=3, d=5, f=7.
+Maximum Number of Orbitals
+
+

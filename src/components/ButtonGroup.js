@@ -72,6 +72,12 @@ const MenuToggle = styled.button`
   @media (max-width: 768px) {
     left: ${({ isOpen }) => (isOpen ? '200px' : '1rem')};
   }
+
+  @media (min-width: 768px) {
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+  }
 `;
 
 const Overlay = styled.div`

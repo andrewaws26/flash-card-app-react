@@ -1,5 +1,3 @@
-import { createGlobalStyle } from 'styled-components';
-
 export const lightTheme = {
   primary: '#ffffff',
   secondary: '#6366f1',

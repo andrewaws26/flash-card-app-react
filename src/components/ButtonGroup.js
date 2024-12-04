@@ -99,6 +99,7 @@ const Overlay = styled.div`
 
 function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
   const [isOpen, setIsOpen] = useState(false);
+  
 
   const sections = [
     { label: 'Ch 1 Study Guide', value: 'ch-one-study-guide.json' },

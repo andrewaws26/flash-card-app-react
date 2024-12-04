@@ -37,6 +37,7 @@ const FocusButtonContainer = styled.div`
   z-index: 1001;
   transition: transform 0.3s ease;
   transform: ${({ $focusMode }) => $focusMode ? 'scale(1.2)' : 'scale(1)'};
+  display: ${({ $focusMode }) => ($focusMode ? 'none' : 'flex')};
 
   @media (min-width: 769px) {
     bottom: 2rem;
@@ -106,8 +107,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [missedCards, setMissedCards] = useState([]);
-  // Remove the cardRevealed state
-  // const [cardRevealed, setCardRevealed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -132,7 +131,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
       setCorrectAnswers(0);
       setIncorrectAnswers(0);
       setMissedCards([]);
-      // setCardRevealed(false);
     } catch (error) {
       console.error('Error loading flashcards:', error);
     } finally {
@@ -157,14 +155,12 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const handleKnowIt = () => {
     setCorrectAnswers(correctAnswers + 1);
     setCurrentCardIndex(currentCardIndex + 1);
-    // setCardRevealed(false);
   };
 
   const handleDontKnowIt = () => {
     setIncorrectAnswers(incorrectAnswers + 1);
     setMissedCards([...missedCards, flashcardsData[currentCardIndex]]);
     setCurrentCardIndex(currentCardIndex + 1);
-    // setCardRevealed(false);
   };
 
   const toggleFocusMode = () => setFocusMode(!focusMode);
@@ -193,6 +189,10 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
         />
       )}
       {loading ? (
+        <Spinner />
+      ) : flashcardsData.length === 0 ? (
+        <div>No flashcards found. Please try again.</div>
+      ) : currentCardIndex >= flashcardsData.length ? (
         <Spinner />
       ) : flashcardsData.length === 0 ? (
         <div>No flashcards found. Please try again.</div>

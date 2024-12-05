@@ -49,6 +49,22 @@ const FlashcardWrapper = styled.div`
       padding: 1rem;  // Adjusted padding for focus mode
     }
   `}
+
+  @media (max-width: 768px) {
+    ${({ $focusMode }) => $focusMode && `
+      height: 100vh;
+      max-height: 100vh;
+      margin: 0;
+      padding: 0;
+      gap: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+    `}
+  }
 `;
 
 const Card = styled.div`
@@ -70,6 +86,16 @@ const Card = styled.div`
       transform: scale(1.1);
     }
   `}
+
+  @media (max-width: 768px) {
+    z-index: 2; // Higher than ButtonContainer
+    ${({ $focusMode }) => $focusMode && `
+      height: 100vh;
+      max-height: 100vh;
+      min-height: 100vh;
+      margin: 0;
+    `}
+  }
 `;
 
 // Update CardInner for vertical flip animation
@@ -111,6 +137,14 @@ const CardFace = styled.div`
       border-radius: 0;
     }
   `}
+
+  @media (max-width: 768px) {
+    ${({ $focusMode }) => $focusMode && `
+      height: 100vh;
+      padding: 1rem;
+      border-radius: 0;
+    `}
+  }
 `;
 
 // Updated CardFront to use vertical flip animation
@@ -138,6 +172,14 @@ const Definition = styled.p`
   @media (min-width: 768px) {
     font-size: 1.75rem; // Larger text on desktop
   }
+
+  @media (max-width: 768px) {
+    margin: 0;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
 `;
 
 const Term = styled.h2`
@@ -153,6 +195,11 @@ const Term = styled.h2`
 
   @media (min-width: 768px) {
     font-size: 2rem; // Larger text on desktop
+  }
+
+  @media (max-width: 768px) {
+    margin: 0;
+    padding: 1rem;
   }
 `;
 
@@ -184,6 +231,24 @@ const ButtonContainer = styled.div`
     right: 0;
     background: transparent;
   `}
+
+  @media (max-width: 768px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    padding: 1rem;
+    background: ${({ theme }) => theme.background};
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1; // Lower than Card
+    ${({ $focusMode }) => $focusMode && `
+      position: fixed;
+      bottom: 0;
+      height: 80px;
+      background: transparent;
+    `}
+  }
 `;
 
 const ActionButton = styled.button`
@@ -256,6 +321,12 @@ const CardContent = styled.div`
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    overflow: hidden;
+    height: 100%;
+  }
 `;
 
 // Update the component to handle focus mode prop

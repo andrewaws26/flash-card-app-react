@@ -67,7 +67,7 @@ const MenuToggle = styled.button`
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   cursor: pointer;
-  z-index: 1001;
+  z-index: 2001;
 
   @media (max-width: 768px) {
     left: ${({ isOpen }) => (isOpen ? '200px' : '1rem')};

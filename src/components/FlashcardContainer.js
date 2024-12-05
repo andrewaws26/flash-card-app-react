@@ -17,7 +17,7 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     background: ${({ theme }) => theme.background};
-    z-index: 1000;
+    z-index: 2000;
     padding: 1rem;
     overflow-y: auto;
     display: flex;
@@ -32,35 +32,58 @@ const Container = styled.div`
 
 const FocusButtonContainer = styled.div`
   position: fixed;
-  bottom: calc(100px + 1rem);
-  right: 1rem;
-  z-index: 1001;
-  transition: transform 0.3s ease;
-  transform: ${({ $focusMode }) => $focusMode ? 'scale(1.2)' : 'scale(1)'};
-  display: ${({ $focusMode }) => ($focusMode ? 'none' : 'flex')};
+  z-index: 3000;
+  transition: all 0.3s ease;
+  display: flex;
+
+  @media (max-width: 768px) {
+    ${({ $focusMode }) => $focusMode ? `
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      transform: scale(0.9);
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 1;
+      }
+    ` : `
+      bottom: 5.5rem;
+      right: 1rem;
+      transform: scale(0.9);
+    `}
+  }
 
   @media (min-width: 769px) {
-    bottom: 2rem;
-    right: 2rem;
+    bottom: ${({ $focusMode }) => ($focusMode ? '1rem' : '2rem')};
+    right: ${({ $focusMode }) => ($focusMode ? '1rem' : '2rem')};
+    transform: ${({ $focusMode }) => $focusMode ? 'scale(0.8)' : 'scale(1)'};
   }
 `;
 
 const FocusButton = styled.button`
-  width: 3.5rem;
-  height: 3.5rem;
+  width: ${({ $focusMode }) => ($focusMode ? '2.5rem' : '3.5rem')};
+  height: ${({ $focusMode }) => ($focusMode ? '2.5rem' : '3.5rem')};
   border-radius: 50%;
   background: ${({ theme }) => theme.accent};
   color: ${({ theme }) => theme.surface};
   border: none;
   cursor: pointer;
-  font-size: 1.75rem; // Increased font size for symbol
-  padding: 0; // Remove padding to center the symbol
+  font-size: ${({ $focusMode }) => ($focusMode ? '1.25rem' : '1.75rem')};
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: ${({ theme }) => theme.shadow};
-  transition: transform 0.3s ease, background 0.3s ease;
-  line-height: 1;
+  transition: all 0.3s ease;
+  opacity: ${({ $focusMode }) => ($focusMode ? '0.8' : '1')};
+
+  &:hover {
+    transform: scale(1.1);
+    background: ${({ theme }) => theme.secondary};
+    opacity: 1;
+  }
 
   span {
     display: flex;
@@ -68,12 +91,27 @@ const FocusButton = styled.button`
     justify-content: center;
     width: 100%;
     height: 100%;
-    transform: translateY(-1px); // Fine-tune symbol vertical alignment
+    transform: translateY(-1px);
   }
 
-  &:hover {
-    transform: scale(1.1);
-    background: ${({ theme }) => theme.secondary};
+  @media (max-width: 768px) {
+    ${({ $focusMode }) => $focusMode && `
+      background: ${({ theme }) => theme.surface};
+      color: ${({ theme }) => theme.text};
+      box-shadow: none;
+      border: 1px solid ${({ theme }) => theme.border};
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 1.25rem;
+
+      &:hover {
+        background: ${({ theme }) => theme.buttonHover};
+        transform: scale(1.05);
+      }
+    `}
+    width: ${({ $focusMode }) => ($focusMode ? '2.25rem' : '3rem')};
+    height: ${({ $focusMode }) => ($focusMode ? '2.25rem' : '3rem')};
+    font-size: ${({ $focusMode }) => ($focusMode ? '1rem' : '1.5rem')};
   }
 `;
 
@@ -168,7 +206,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   return (
     <Container $isMobile={isMobile} $focusMode={focusMode}>
       <FocusButtonContainer $focusMode={focusMode}>
-        <FocusButton onClick={toggleFocusMode}>
+        <FocusButton onClick={toggleFocusMode} $focusMode={focusMode}>
           <span>{focusMode ? '⇲' : '⇱'}</span>
         </FocusButton>
       </FocusButtonContainer>

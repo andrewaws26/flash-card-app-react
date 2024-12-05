@@ -1,246 +1,60 @@
+/* styles.css */
+
+/* General styles */
 body {
-    transition: background-color 0.3s, color 0.3s;
-    margin: 0; /* Removed bottom margin */
-    position: relative; /* Added position relative */
+  background-color: #fff;
+  color: #000;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
-/* Remove any background-color settings if present */
+.container {
+  padding: 20px;
+}
 
 .flashcard {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px; /* Reduced border-radius */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Reduced shadow */
-    margin: 10px auto; /* Reduced margin */
-    padding: 15px;  /* Reduced padding */
-    width: 90%;      /* Adjusted width */
-    max-width: 400px; /* Reduced max-width */
-    text-align: center;
-    transition: all 0.3s, transform 0.3s, box-shadow 0.3s;
-    font-size: 1em;  /* Reduced font size */
-    display: none;
-}
-
-.term {
-    font-weight: bold;
-    font-size: 1.5em;
-    margin-top: 20px;
-    display: none; /* Initially hide the term */
-}
-
-.definition {
-    margin-bottom: 20px;
-    font-size: 1.2em;
-    line-height: 1.4;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
 .button-container {
-    display: none; /* Initially hide the buttons */
-    margin-top: 20px;
-}
-
-.responsive-image {
-    width: 100%;
-    height: auto;
-    max-width: 600px; /* Adjust as needed */
-    display: block;
-    margin: 0 auto;
-}
-
-.dark-mode {
-    background-color: #333 !important;
-    color: #f4f4f4;
-}
-
-.dark-mode .flashcard {
-    background-color: #444;
-    color: #f4f4f4;
-}
-
-.dark-mode .term,
-.dark-mode .definition,
-.dark-mode .button-container,
-.dark-mode .responsive-image,
-.dark-mode .active-button,
-.dark-mode .inactive-button {
-    color: #f4f4f4; /* Ensure text is visible in dark mode */
-}
-
-.dark-mode-toggle,
-.reset-button,
-.ch-9-button,
-.ch-10-button,
-.lab-11-button,
-.sg-3-button,
-.ch-8-button,
-.lab-12-button {
-    background-color: #888;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 1000;
-    transition: background-color 0.3s;
-    font-size: 0.9em;
-    margin: 5px;
-}
-
-/* Active and Inactive Button Styling */
-.active-button {
-    background-color: #007bff; /* Blue color for active button */
-    color: white;
-}
-
-.inactive-button {
-    background-color: #888; /* Gray color for inactive buttons */
-    color: white;
-}
-
-/* Flexbox layout for the counters */
-#counters {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    z-index: 1000; /* Added z-index */
-}
-
-#counters > div {
-    text-align: center;
-    margin: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 button {
-    transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
 }
 
-button:hover {
-    transform: translateY(-2px);
+/* Dark mode styles */
+.dark-mode {
+  background-color: #333 !important;
+  color: #f4f4f4;
 }
 
-/* Media query for mobile devices */
-@media (max-width: 600px) {
-    #button-container {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 10px;
-        background-color: #f8f9fa; /* Light background to ensure visibility */
-        border-top: 1px solid #ddd; /* Subtle border to separate from content */
-        z-index: 1000;
-        height: auto; /* Adjust height for collapsible menu */
-        max-height: 50px; /* Reduced max-height */
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-    }
-
-    #button-container.expanded {
-        max-height: 300px; /* Expanded height */
-    }
-
-    .dark-mode #button-container {
-        background-color: #444; /* Dark background for the bottom container in dark mode */
-        border-top: 1px solid #333; /* Darker border in dark mode */
-    }
-
-    .dark-mode .dark-mode-toggle,
-    .dark-mode .reset-button,
-    .dark-mode .ch-9-button,
-    .dark-mode .ch-10-button,
-    .dark-mode .sg-3-button,
-    .dark-mode .lab-11-button,
-    .dark-mode .ch-8-button,
-    .dark-mode .lab-12-button {
-        background-color: #555; /* Darker button background in dark mode */
-        color: #f4f4f4; /* Light text color in dark mode */
-    }
-
-    .dark-mode-toggle,
-    .reset-button,
-    .ch-9-button,
-    .ch-10-button,
-    .lab-11-button,
-    .sg-3-button,
-    .ch-8-button,
-    .lab-12-button {
-        margin: 0 5px;
-        flex: 1;
-        text-align: center;
-    }
-
-    .toggle-menu-button {
-        background-color: #888;
-        color: white;
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        z-index: 1000;
-        transition: background-color 0.3s;
-        font-size: 0.9em;
-        margin: 5px;
-    }
-
-    body {
-        margin-bottom: 100px; /* Make space for the button bar */
-    }
-
-    /* Adjust flashcard size for landscape mode */
-    .flashcard {
-        max-width: 90%; /* Adjusted for landscape */
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    .flashcard-wrapper {
-        width: 100%;
-        padding: 0 1rem;
-    }
-
-    .flashcard-container.focus-mode {
-        padding: 0;
-    }
+.dark-mode .container {
+  background-color: #333;
+  color: #f4f4f4;
 }
 
-/* For larger screens (desktop), keep the buttons at the top */
-@media (min-width: 601px) {
-    #button-container {
-        position: static;
-        display: block;
-    }
-
-    .flashcard {
-        max-width: 600px; /* Increase max-width for larger images */
-    }
+.dark-mode .flashcard {
+  background-color: #444;
+  color: #f4f4f4;
 }
 
-/* Ensure no vertical overflow */
-html, body {
-    height: 100%;
-    overflow: hidden;
+.dark-mode .button-container {
+  background-color: #444;
+  color: #f4f4f4;
 }
 
-#root {
-    height: 100%;
-}
-
-#button-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 0.5rem;
-    background-color: #f8f9fa;
-    border-top: 1px solid #ddd;
-    z-index: 1000;
-    height: 50px; /* Fixed height */
-    transition: max-height 0.3s ease;
+.dark-mode button {
+  background-color: #555;
+  color: #f4f4f4;
 }

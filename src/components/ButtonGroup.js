@@ -14,27 +14,28 @@ const ButtonGroupContainer = styled.div`
 `;
 
 const StyledButton = styled.button`
-  background: ${({ active, theme }) => (active ? theme.accent : theme.surface)};
+  background: ${({ active, theme }) => (active ? theme.buttonActive : theme.background)};
   color: ${({ active, theme }) => (active ? theme.surface : theme.text)};
-  padding: 0.5rem 0.75rem;  // Reduced padding
+  padding: 0.6rem 1rem;
   border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 0.4rem;     // Reduced border-radius
+  border-radius: 0.5rem;
   cursor: pointer;
   font-weight: 500;
   width: 100%;
-  transition: all 0.2s ease, background-color 0.3s, transform 0.3s;
+  transition: background 0.3s ease, transform 0.2s ease;
   box-shadow: ${({ theme }) => theme.shadow};
 
   &:hover {
-    transform: translateY(-1px);  // Reduced translate
+    background: ${({ theme }) => theme.buttonHover};
+    transform: translateY(-2px);
     box-shadow: ${({ theme }) => theme.hoverShadow};
   }
 
   @media (max-width: 767px) {
     width: auto;
     flex: 1 1 auto;
-    min-width: 80px;   // Reduced min-width
-    max-width: 150px;  // Reduced max-width
+    min-width: 80px;
+    max-width: 150px;
   }
 `;
 
@@ -45,14 +46,16 @@ const SidebarContainer = styled.div`
   min-height: 100vh;
   position: fixed;
   left: ${({ isOpen }) => (isOpen ? '0' : '-250px')};
-  top: 0;
-  transition: left 0.3s ease;
-  box-shadow: ${({ theme }) => theme.shadow};
+  top: 4rem;
+  transition: left 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: ${({ isOpen, theme }) => (isOpen ? `4px 0 12px ${theme.shadow}` : 'none')};
+  border-right: 1px solid ${({ theme }) => theme.border};
   z-index: 1000;
 
   @media (max-width: 768px) {
     width: 200px;
     left: ${({ isOpen }) => (isOpen ? '0' : '-200px')};
+    top: 4rem;
   }
 `;
 
@@ -61,8 +64,8 @@ const MenuToggle = styled.button`
   color: ${({ theme }) => theme.surface};
   position: fixed;
   top: 1rem;
-  left: ${({ isOpen }) => (isOpen ? '250px' : '1rem')};
-  transition: left 0.3s ease;
+  left: ${({ isOpen }) => (isOpen ? '260px' : '1rem')};
+  transition: left 0.3s ease, transform 0.3s ease;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -70,7 +73,7 @@ const MenuToggle = styled.button`
   z-index: 2001;
 
   @media (max-width: 768px) {
-    left: ${({ isOpen }) => (isOpen ? '200px' : '1rem')};
+    left: ${({ isOpen }) => (isOpen ? '210px' : '1rem')};
   }
 
   @media (min-width: 768px) {
@@ -87,8 +90,8 @@ const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  opacity: ${({ isOpen }) => isOpen ? 1 : 0};
-  pointer-events: ${({ isOpen }) => isOpen ? 'auto' : 'none'};
+  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+  pointer-events: ${({ isOpen }) => (isOpen ? 'auto' : 'none')};
   transition: opacity 0.3s ease;
   z-index: 999;
 
@@ -99,7 +102,6 @@ const Overlay = styled.div`
 
 function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
   const [isOpen, setIsOpen] = useState(false);
-  
 
   const sections = [
     { label: 'Ch 1 Study Guide', value: 'ch-one-study-guide.json' },
@@ -115,7 +117,7 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
     <>
       <Overlay isOpen={isOpen} onClick={() => setIsOpen(false)} />
       <MenuToggle onClick={() => setIsOpen(!isOpen)} isOpen={isOpen}>
-        {isOpen ? 'Close Menu' : 'Open Menu'}
+        {isOpen ? 'Close' : 'Menu'}
       </MenuToggle>
       <SidebarContainer isOpen={isOpen}>
         <ButtonGroupContainer>

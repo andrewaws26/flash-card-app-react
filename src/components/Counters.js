@@ -12,7 +12,7 @@ const StatsContainer = styled.div`
   border-radius: 0.5rem;
   box-shadow: ${({ theme }) => theme.shadow};
   position: fixed;
-  z-index: 1000;
+  z-index: 1;
 
   ${({ $focusMode }) => $focusMode && `
     position: fixed;
@@ -37,12 +37,13 @@ const StatsContainer = styled.div`
   }
 
   @media (min-width: 768px) {
-    top: 1rem;
-    bottom: auto;
-    left: auto;
+    flex-direction: column;
+    top: 50%;
     right: 1rem;
-    transform: none;
-    align-items: flex-end;
+    transform: translateY(-50%);
+    width: auto;
+    padding: 1rem;
+    gap: 1rem;
   }
 `;
 
@@ -78,31 +79,24 @@ const StatItem = styled.div`
       font-size: 1rem;
     }
   }
-`;
-
-const ProgressBar = styled.div`
-  width: 100%;
-  height: 8px;
-  background: ${({ theme }) => theme.border};
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 0.5rem;
 
   @media (min-width: 768px) {
-    margin-top: 1rem;
+    width: 100%;
+    min-width: 120px;
+    padding: 0.75rem;
+
+    h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    span {
+      font-size: 1.5rem;
+    }
   }
 `;
 
-const Progress = styled.div`
-  width: ${({ progress }) => progress}%;
-  height: 100%;
-  background: ${({ theme }) => theme.accent};
-  transition: width 0.3s ease;
-`;
-
 function Counters({ totalCards, correctAnswers, incorrectAnswers, $focusMode }) {
-  const progress = totalCards ? ((correctAnswers + incorrectAnswers) / totalCards) * 100 : 0;
-
   return (
     <StatsContainer $focusMode={$focusMode}>
       <StatItem>
@@ -117,9 +111,6 @@ function Counters({ totalCards, correctAnswers, incorrectAnswers, $focusMode }) 
         <h3>Incorrect</h3>
         <span style={{ color: '#ef4444' }}>{incorrectAnswers}</span>
       </StatItem>
-      <ProgressBar>
-        <Progress progress={progress} />
-      </ProgressBar>
     </StatsContainer>
   );
 }

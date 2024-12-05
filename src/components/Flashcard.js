@@ -75,7 +75,7 @@ const Card = styled.div`
   position: relative; // Add position relative
 
   @media (min-width: 768px) {
-    min-height: 400px;
+    min-height: 600px;
   }
 
   ${({ $focusMode }) => $focusMode && `
@@ -94,6 +94,7 @@ const Card = styled.div`
       max-height: 100vh;
       min-height: 100vh;
       margin: 0;
+      padding-bottom: 0; // Remove padding since buttons are hidden
     `}
   }
 `;
@@ -107,7 +108,7 @@ const CardInner = styled.div`
   transform-style: preserve-3d;
   transform: ${({ $flipped }) => ($flipped ? 'rotateX(180deg)' : 'rotateX(0deg)')};
   cursor: pointer;
-  min-height: 200px;
+  min-height: 600px;
   box-shadow: ${({ theme }) => theme.shadow};
 `;
 
@@ -233,21 +234,7 @@ const ButtonContainer = styled.div`
   `}
 
   @media (max-width: 768px) {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 80px;
-    padding: 1rem;
-    background: ${({ theme }) => theme.background};
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1; // Lower than Card
-    ${({ $focusMode }) => $focusMode && `
-      position: fixed;
-      bottom: 0;
-      height: 80px;
-      background: transparent;
-    `}
+    display: none; // Hide buttons on mobile
   }
 `;
 

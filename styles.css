@@ -61,6 +61,11 @@ body {
     margin: 5px;
 }
 
+.dark-mode #button-container {
+    background-color: #444; /* Dark background for the bottom container in dark mode */
+    border-top: 1px solid #333; /* Darker border in dark mode */
+}
+
 /* Media query for mobile devices */
 @media (max-width: 600px) {
     #button-container {

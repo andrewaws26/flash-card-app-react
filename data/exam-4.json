@@ -1,0 +1,363 @@
+[
+    {
+        "term": "Central Nervous System (CNS)",
+        "definition": "Composed of the brain and spinal cord, it processes and integrates sensory data and coordinates motor output."
+    },
+    {
+        "term": "Cerebrospinal Fluid (CSF)",
+        "definition": "A fluid that cushions the CNS, circulates nutrients, and removes waste. Produced by choroid plexuses in the ventricles."
+    },
+    {
+        "term": "Dura Mater",
+        "definition": "The tough, outermost meningeal layer that provides structural support and protection for the brain and spinal cord."
+    },
+    {
+        "term": "Arachnoid Mater",
+        "definition": "The middle meningeal layer, web-like in structure, containing the subarachnoid space where CSF circulates."
+    },
+    {
+        "term": "Pia Mater",
+        "definition": "The delicate innermost layer of the meninges, closely adhering to the surface of the brain and spinal cord, containing blood vessels."
+    },
+    {
+        "term": "Falx Cerebri",
+        "definition": "A fold of dura mater that separates the cerebral hemispheres."
+    },
+    {
+        "term": "Choroid Plexuses",
+        "definition": "Capillary networks in ventricles that produce cerebrospinal fluid by filtering blood plasma."
+    },
+    {
+        "term": "Fourth Ventricle",
+        "definition": "A CSF-filled cavity located between the brainstem and cerebellum, continuous with the central canal of the spinal cord."
+    },
+    {
+        "term": "Components of a Reflex Arc",
+        "definition": "Receptor, sensory neuron, interneuron, motor neuron, and effector involved in reflex responses."
+    },
+    {
+        "term": "Flexor Extensor Reflex",
+        "definition": "A protective reflex that causes withdrawal from a painful stimulus."
+    },
+    {
+        "term": "Crossed Extensor Reflex",
+        "definition": "A reflex where one limb withdraws while the opposite limb extends to maintain balance."
+    },
+    {
+        "term": "Reciprocal Innervation",
+        "definition": "The simultaneous activation of one muscle group and inhibition of its antagonist to coordinate movement."
+    },
+    {
+        "term": "Triceps-Jerk Reflex",
+        "definition": "A reflex that tests the C7-C8 nerves, causing contraction of the triceps brachii muscle."
+    },
+    {
+        "term": "Spinothalamic Tract",
+        "definition": "A sensory pathway transmitting pain, temperature, and crude touch to the thalamus."
+    },
+    {
+        "term": "Gray Matter of the Spinal Cord",
+        "definition": "Contains neuronal cell bodies and interneurons involved in processing and integrating sensory and motor signals."
+    },
+    {
+        "term": "Ulnar Nerve",
+        "definition": "A major nerve in the brachial plexus that innervates the hand and forearm."
+    },
+    {
+        "term": "Axillary Nerve",
+        "definition": "Supplies the deltoid and teres minor muscles and the skin over the shoulder."
+    },
+    {
+        "term": "Obturator Nerve",
+        "definition": "Innervates the adductor muscles of the thigh and part of the skin on the medial thigh."
+    },
+    {
+        "term": "Cauda Equina",
+        "definition": "A bundle of nerve roots extending from the lower spinal cord resembling a horse's tail."
+    },
+    {
+        "term": "Cervical Enlargement",
+        "definition": "An enlarged area of the spinal cord that supplies nerves to the upper limbs."
+    },
+    {
+        "term": "Cerebrum",
+        "definition": "The largest brain region responsible for sensory perception, voluntary movements, learning, memory, and higher reasoning."
+    },
+    {
+        "term": "Brainstem",
+        "definition": "Connects the brain to the spinal cord and controls basic life functions like breathing, heartbeat, and reflexes."
+    },
+    {
+        "term": "Cerebellum",
+        "definition": "Responsible for coordination of voluntary movements, balance, and posture."
+    },
+    {
+        "term": "Corpus Callosum",
+        "definition": "A thick band of axons that connects and facilitates communication between the two cerebral hemispheres."
+    },
+    {
+        "term": "Frontal Lobe",
+        "definition": "Involved in voluntary movement, decision-making, reasoning, and speech production (Broca's area)."
+    },
+    {
+        "term": "Parietal Lobe",
+        "definition": "Processes sensory input related to touch, temperature, and body position."
+    },
+    {
+        "term": "Temporal Lobe",
+        "definition": "Processes auditory information, memory, and language comprehension (Wernicke's area)."
+    },
+    {
+        "term": "Occipital Lobe",
+        "definition": "The brain's primary visual processing center."
+    },
+    {
+        "term": "Basal Nuclei",
+        "definition": "Subcortical gray matter structures that regulate voluntary movement by inhibiting or facilitating motor commands."
+    },
+    {
+        "term": "Limbic System",
+        "definition": "A network of structures involved in emotion, motivation, and memory processing."
+    },
+    {
+        "term": "Diencephalon",
+        "definition": "Contains the thalamus and hypothalamus; relays sensory information and regulates homeostasis."
+    },
+    {
+        "term": "Hypothalamus Functions",
+        "definition": "Regulates temperature, thirst, hunger, sleep, and links the endocrine and nervous systems."
+    },
+    {
+        "term": "Postcentral Gyrus",
+        "definition": "The primary somatosensory cortex located in the parietal lobe, processing sensory input from the body."
+    },
+    {
+        "term": "Pyramidal Cells",
+        "definition": "Neurons in the cerebral cortex responsible for voluntary motor control."
+    },
+    {
+        "term": "Cerebral Cortex",
+        "definition": "The outer layer of gray matter in the cerebrum responsible for higher mental processes."
+    },
+    {
+        "term": "Hemisphere Dominance",
+        "definition": "One hemisphere (typically the left) dominates functions like language, writing, and analytical tasks."
+    },
+    {
+        "term": "Basal Nuclei Function",
+        "definition": "Helps regulate movement initiation and prevent unwanted movements."
+    },
+    {
+        "term": "Spinal Nerve Fibers",
+        "definition": "Contain motor, sensory, and autonomic fibers."
+    },
+    {
+        "term": "Dermatome",
+        "definition": "An area of skin innervated by a single spinal nerve."
+    },
+    {
+        "term": "Somatic Nervous System",
+        "definition": "Controls voluntary movements by innervating skeletal muscles."
+    },
+    {
+        "term": "Autonomic Nervous System",
+        "definition": "Regulates involuntary functions such as heart rate and digestion."
+    },
+    {
+        "term": "Sympathetic Nervous System",
+        "definition": "Prepares the body for fight or flight responses, increasing heart rate and energy mobilization."
+    },
+    {
+        "term": "Parasympathetic Nervous System",
+        "definition": "Promotes rest and digest activities, decreasing heart rate and conserving energy."
+    },
+    {
+        "term": "Long Preganglionic Neurons",
+        "definition": "Characteristic of the parasympathetic nervous system; extend to ganglia near target organs."
+    },
+    {
+        "term": "Optic Nerves (CN II)",
+        "definition": "Transmit visual information from the retina to the brain."
+    },
+    {
+        "term": "Oculomotor Nerves (CN III)",
+        "definition": "Control most eye movements, pupil constriction, and maintaining an open eyelid."
+    },
+    {
+        "term": "Facial Nerves (CN VII)",
+        "definition": "Control facial expressions, taste from the anterior tongue, and salivary/lacrimal glands."
+    },
+    {
+        "term": "Vagus Nerve (CN X)",
+        "definition": "Controls autonomic functions in the heart, lungs, and digestive tract."
+    },
+    {
+        "term": "Baroreceptors",
+        "definition": "Pressure-sensitive receptors that detect changes in blood pressure."
+    },
+    {
+        "term": "Photoreceptors",
+        "definition": "Specialized cells in the retina (rods and cones) that detect light."
+    },
+    {
+        "term": "Sensory Adaptation",
+        "definition": "The decrease in sensitivity to a constant stimulus over time."
+    },
+    {
+        "term": "Mechanoreceptors",
+        "definition": "Respond to physical deformation such as pressure, vibration, and stretch."
+    },
+    {
+        "term": "Muscle Spindles",
+        "definition": "Receptors in muscles that detect stretch and initiate reflexes to resist it."
+    },
+    {
+        "term": "Golgi Tendon Organs",
+        "definition": "Receptors in tendons that protect against excessive tension."
+    },
+    {
+        "term": "Static Equilibrium",
+        "definition": "The sense of head position relative to gravity, detected by the vestibule in the inner ear."
+    },
+    {
+        "term": "Semicircular Canals",
+        "definition": "Detect rotational movements of the head for dynamic equilibrium."
+    },
+    {
+        "term": "Retina",
+        "definition": "The light-sensitive layer of the eye where images are focused and converted into neural signals."
+    },
+    {
+        "term": "Fovea Centralis",
+        "definition": "The region of the retina with the highest visual acuity, densely packed with cones."
+    },
+    {
+        "term": "Astigmatism",
+        "definition": "A visual defect caused by an irregularly shaped cornea or lens."
+    },
+    {
+        "term": "Cerebral Peduncles",
+        "definition": "Bundles of axons in the midbrain that connect the cerebrum to the lower parts of the brain and spinal cord."
+    },
+    {
+        "term": "Superior Colliculi",
+        "definition": "Part of the midbrain involved in visual reflexes, such as tracking moving objects."
+    },
+    {
+        "term": "Inferior Colliculi",
+        "definition": "Part of the midbrain responsible for auditory reflexes, such as the startle response to loud sounds."
+    },
+    {
+        "term": "Reticular Formation",
+        "definition": "A network of interconnected neurons in the brainstem that regulates wakefulness and sleep-wake transitions."
+    },
+    {
+        "term": "Subarachnoid Space",
+        "definition": "The area between the arachnoid mater and pia mater filled with cerebrospinal fluid."
+    },
+    {
+        "term": "Blood-Brain Barrier",
+        "definition": "A selective barrier formed by endothelial cells that prevents harmful substances in the bloodstream from entering the brain."
+    },
+    {
+        "term": "Thalamus",
+        "definition": "The brain's relay center for sensory information (except smell), directing it to the appropriate areas of the cerebral cortex."
+    },
+    {
+        "term": "Medulla Oblongata",
+        "definition": "Part of the brainstem that controls vital functions such as heartbeat, breathing, and blood pressure."
+    },
+    {
+        "term": "Pons",
+        "definition": "A part of the brainstem that relays signals between the medulla and the cerebellum, and also contains centers that regulate respiration."
+    },
+    {
+        "term": "Cerebellar Peduncles",
+        "definition": "Fiber tracts connecting the cerebellum to the brainstem, facilitating communication and coordination."
+    },
+    {
+        "term": "Wernicke's Area",
+        "definition": "A brain region in the temporal lobe involved in language comprehension."
+    },
+    {
+        "term": "Broca's Area",
+        "definition": "A brain region in the frontal lobe responsible for speech production and articulation."
+    },
+    {
+        "term": "Association Areas",
+        "definition": "Regions of the cerebral cortex that integrate sensory and motor information and are involved in higher cognitive processes."
+    },
+    {
+        "term": "Cranial Nerve III: Oculomotor",
+        "definition": "Controls most of the eye's movements, the constriction of the pupil, and maintains an open eyelid."
+    },
+    {
+        "term": "Cranial Nerve VII: Facial",
+        "definition": "Controls facial expressions, taste sensations from the anterior tongue, and salivary and tear gland functions."
+    },
+    {
+        "term": "Cranial Nerve IX: Glossopharyngeal",
+        "definition": "Controls swallowing, taste from the posterior tongue, and monitors blood pressure and oxygen levels in the blood."
+    },
+    {
+        "term": "Cranial Nerve XII: Hypoglossal",
+        "definition": "Controls tongue movements essential for speech and swallowing."
+    },
+    {
+        "term": "Arachnoid Granulations",
+        "definition": "Projections of the arachnoid mater into dural sinuses that allow for the reabsorption of cerebrospinal fluid into the bloodstream."
+    },
+    {
+        "term": "Pineal Gland",
+        "definition": "A small endocrine gland in the brain responsible for producing melatonin, regulating sleep-wake cycles."
+    },
+    {
+        "term": "Lateralization of Brain Function",
+        "definition": "The specialization of certain functions, such as language (left hemisphere) or spatial abilities (right hemisphere), in one hemisphere of the brain."
+    },
+    {
+        "term": "Referred Pain",
+        "definition": "Pain perceived in a location different from the actual source due to shared nerve pathways."
+    },
+    {
+        "term": "Ascending Tracts",
+        "definition": "Pathways in the spinal cord that carry sensory information to the brain."
+    },
+    {
+        "term": "Descending Tracts",
+        "definition": "Pathways in the spinal cord that transmit motor commands from the brain to the body."
+    },
+    {
+        "term": "Decussation of Pyramids",
+        "definition": "The crossing of motor fibers in the medulla, which explains why each brain hemisphere controls the opposite side of the body."
+    },
+    {
+        "term": "Proprioception",
+        "definition": "The body's ability to sense its position and movement in space through receptors in muscles, tendons, and joints."
+    },
+    {
+        "term": "Substantia Nigra",
+        "definition": "A midbrain structure involved in reward, addiction, and movement, with dysfunction linked to Parkinson's disease."
+    },
+    {
+        "term": "Olfactory Bulb",
+        "definition": "Processes odor information from the olfactory nerves and relays it to the brain."
+    },
+    {
+        "term": "Vermis",
+        "definition": "The central region of the cerebellum involved in regulating posture and locomotion."
+    },
+    {
+        "term": "Neuroplasticity",
+        "definition": "The ability of the brain to reorganize itself by forming new neural connections throughout life."
+    },
+    {
+        "term": "Hippocampus",
+        "definition": "A part of the limbic system critical for the formation and retrieval of memories."
+    },
+    {
+        "term": "Amygdala",
+        "definition": "A limbic structure involved in emotional responses, particularly fear and aggression."
+    }
+
+]

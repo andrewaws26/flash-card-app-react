@@ -45,7 +45,7 @@ const ContentArea = styled.div`
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
-  const [currentSection, setCurrentSection] = useState('ch-one-study-guide.json');
+  const [currentSection, setCurrentSection] = useState('exam-4.json');
   const [totalCards, setTotalCards] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
@@ -72,7 +72,7 @@ function App() {
     // Force a reload by changing section to empty and back
     setCurrentSection('');
     setTimeout(() => {
-      setCurrentSection('ch-one-study-guide.json');
+      setCurrentSection('exam-4.json');
     }, 0);
 
     setTotalCards(0);

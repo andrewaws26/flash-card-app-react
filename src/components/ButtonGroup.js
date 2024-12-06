@@ -56,13 +56,7 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode, onShowInstruc
   const [isOpen, setIsOpen] = useState(false);
 
   const sections = [
-    { label: 'Ch 1 Study Guide', value: 'ch-one-study-guide.json' },
-    { label: 'Ch 8', value: 'flashcards-ch-eight.json' },
-    { label: 'Ch 9', value: 'flashcards-ch-nine.json' },
-    { label: 'Ch 10', value: 'flashcards-ch-ten.json' },
-    { label: 'Sg 3', value: 'flashcards-sg-three.json' },
-    { label: 'Lab 11', value: 'flashcards-lab-eleven.json' },
-    { label: 'Lab 12', value: 'flashcards-lab-twelve.json' },
+    { label: 'Exam 4', value: 'exam-4.json' }
   ];
 
   const toggleMenu = () => setIsOpen(!isOpen);

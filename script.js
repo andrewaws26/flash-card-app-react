@@ -16,7 +16,7 @@ const reviewingLabel = document.getElementById('reviewing-label');
 // Load flashcards from a JSON file
 async function loadFlashcards() {
     try {
-        const response = await fetch('flashcards-section-one.json?cachebuster=' + new Date().getTime());
+        const response = await fetch('exam-4.json?cachebuster=' + new Date().getTime());
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

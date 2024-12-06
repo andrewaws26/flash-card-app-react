@@ -10,6 +10,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  
   ${({ $focusMode }) => $focusMode && `
     position: fixed;
     top: 0;
@@ -21,13 +22,19 @@ const Container = styled.div`
     padding: 1rem;
     overflow-y: auto;
     display: flex;
+    flex-direction: column; /* Ensure column direction in focus mode */
     align-items: center;
     justify-content: center;
   `}
-  min-height: 300px;  // Reduced minimum height
-  padding: 0.5rem;     // Reduced padding
+  
+  min-height: 400px;  /* Reduced minimum height */
+  padding: 0.5rem;     /* Reduced padding */
   width: 100%;
   max-width: none;
+
+  @media (max-width: 768px) {
+    
+  }
 `;
 
 const FocusButtonContainer = styled.div`
@@ -213,11 +220,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
       <ProgressIndicator>
         {currentCardIndex + 1} of {flashcardsData.length}
       </ProgressIndicator>
-      {isMobile && (
-        <SwipeInstructions>
-          After revealing the answer, swipe right if you know it, left if you don't.
-        </SwipeInstructions>
-      )}
       {!focusMode && (
         <Counters 
           totalCards={flashcardsData.length}

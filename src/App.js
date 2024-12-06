@@ -8,6 +8,7 @@ import './styles/styles.css';
 import { AppContainer, MainContent, Sidebar } from './components/Layout';
 import styled from 'styled-components';
 import { GlobalStyles } from './GlobalStyles'; // Ensure only GlobalStyles is imported
+import InstructionsModal from './components/InstructionsModal'; // Create this component
 
 const Header = styled.h1`
   font-size: 2.5rem;
@@ -17,7 +18,15 @@ const Header = styled.h1`
   text-align: center;
   
   @media (max-width: 768px) {
-    font-size: 2rem;
+    font-size: 1.75rem;
+    margin: 1rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: ${({ theme }) => theme.background};
+    padding: 1rem;
+    z-index: 2;
   }
 `;
 
@@ -27,6 +36,11 @@ const ContentArea = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px) {
+   
+    position: relative; // Add for absolute positioning context
+  }
 `;
 
 function App() {
@@ -35,6 +49,7 @@ function App() {
   const [totalCards, setTotalCards] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const handleToggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -73,6 +88,14 @@ function App() {
     setIncorrectAnswers(incorrect);
   };
 
+  const handleShowInstructions = () => {
+    setShowInstructions(true);
+  };
+
+  const handleCloseInstructions = () => {
+    setShowInstructions(false);
+  };
+
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <GlobalStyles /> {/* Use only GlobalStyles */}
@@ -82,6 +105,7 @@ function App() {
             onToggleDarkMode={handleToggleDarkMode}
             onSectionChange={handleSectionChange}
             onReset={handleReset}
+            onShowInstructions={handleShowInstructions}
           />
         </Sidebar>
         <MainContent>
@@ -99,6 +123,9 @@ function App() {
           />
         </MainContent>
       </AppContainer>
+      {showInstructions && (
+        <InstructionsModal onClose={handleCloseInstructions} />
+      )}
     </ThemeProvider>
   );
 }

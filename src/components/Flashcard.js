@@ -45,7 +45,7 @@ const FlashcardWrapper = styled.div`
 
     @media (min-width: 768px) {
       max-width: 90vw;
-      max-height: 90vh;
+      max-height: 100vh;
       padding: 1rem;  // Adjusted padding for focus mode
     }
   `}
@@ -64,6 +64,7 @@ const FlashcardWrapper = styled.div`
       bottom: 0;
       overflow: hidden;
     `}
+    margin-bottom: 3rem; // Add padding at the bottom
   }
 `;
 
@@ -76,6 +77,7 @@ const Card = styled.div`
 
   @media (min-width: 768px) {
     min-height: 600px;
+
   }
 
   ${({ $focusMode }) => $focusMode && `
@@ -89,6 +91,9 @@ const Card = styled.div`
 
   @media (max-width: 768px) {
     z-index: 2; // Higher than ButtonContainer
+    height: calc(100vh)
+   
+    min-height: auto; // Remove min-height constraint
     ${({ $focusMode }) => $focusMode && `
       height: 100vh;
       max-height: 100vh;
@@ -140,6 +145,12 @@ const CardFace = styled.div`
   `}
 
   @media (max-width: 768px) {
+    height: 100%; // Ensure full height
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
     ${({ $focusMode }) => $focusMode && `
       height: 100vh;
       padding: 1rem;

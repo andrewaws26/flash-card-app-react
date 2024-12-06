@@ -59,29 +59,7 @@ const SidebarContainer = styled.div`
   }
 `;
 
-const MenuToggle = styled.button`
-  background: ${({ theme }) => theme.accent};
-  color: ${({ theme }) => theme.surface};
-  position: fixed;
-  top: 1rem;
-  left: ${({ isOpen }) => (isOpen ? '260px' : '1rem')};
-  transition: left 0.3s ease, transform 0.3s ease;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  z-index: 2001;
-
-  @media (max-width: 768px) {
-    left: ${({ isOpen }) => (isOpen ? '210px' : '1rem')};
-  }
-
-  @media (min-width: 768px) {
-    top: 1rem;
-    left: 1rem;
-    z-index: 1001;
-  }
-`;
+// Removed MenuToggle definition
 
 const Overlay = styled.div`
   position: fixed;
@@ -100,7 +78,7 @@ const Overlay = styled.div`
   `}
 `;
 
-function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
+function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode, onShowInstructions }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const sections = [
@@ -116,9 +94,7 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
   return (
     <>
       <Overlay isOpen={isOpen} onClick={() => setIsOpen(false)} />
-      <MenuToggle onClick={() => setIsOpen(!isOpen)} isOpen={isOpen}>
-        {isOpen ? 'Close' : 'Menu'}
-      </MenuToggle>
+      {/* Removed MenuToggle usage */}
       <SidebarContainer isOpen={isOpen}>
         <ButtonGroupContainer>
           <StyledButton onClick={onToggleDarkMode}>
@@ -126,6 +102,9 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode }) {
           </StyledButton>
           <StyledButton onClick={onReset}>
             Reset
+          </StyledButton>
+          <StyledButton onClick={onShowInstructions}>
+            Instructions
           </StyledButton>
           {sections.map((section) => (
             <StyledButton

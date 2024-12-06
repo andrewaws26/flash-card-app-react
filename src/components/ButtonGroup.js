@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { StyledButton } from '../styles/SharedComponents';
+import Header from './Header'; // Import the Header component
 
 const ButtonGroupContainer = styled.div`
   display: flex;
@@ -13,39 +15,13 @@ const ButtonGroupContainer = styled.div`
   }
 `;
 
-const StyledButton = styled.button`
-  background: ${({ active, theme }) => (active ? theme.buttonActive : theme.background)};
-  color: ${({ active, theme }) => (active ? theme.surface : theme.text)};
-  padding: 0.6rem 1rem;
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-weight: 500;
-  width: 100%;
-  transition: background 0.3s ease, transform 0.2s ease;
-  box-shadow: ${({ theme }) => theme.shadow};
-
-  &:hover {
-    background: ${({ theme }) => theme.buttonHover};
-    transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.hoverShadow};
-  }
-
-  @media (max-width: 767px) {
-    width: auto;
-    flex: 1 1 auto;
-    min-width: 80px;
-    max-width: 150px;
-  }
-`;
-
 const SidebarContainer = styled.div`
   background: ${({ theme }) => theme.surface};
   padding: 2rem 1rem;
   width: 250px;
   min-height: 100vh;
   position: fixed;
-  left: ${({ isOpen }) => (isOpen ? '0' : '-250px')};
+  left: ${({ $isOpen }) => ($isOpen ? '0' : '-250px')};
   top: 4rem;
   transition: left 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
   box-shadow: ${({ isOpen, theme }) => (isOpen ? `4px 0 12px ${theme.shadow}` : 'none')};
@@ -54,12 +30,10 @@ const SidebarContainer = styled.div`
 
   @media (max-width: 768px) {
     width: 200px;
-    left: ${({ isOpen }) => (isOpen ? '0' : '-200px')};
+    left: ${({ $isOpen }) => ($isOpen ? '0' : '-200px')};
     top: 4rem;
   }
 `;
-
-// Removed MenuToggle definition
 
 const Overlay = styled.div`
   position: fixed;
@@ -68,7 +42,7 @@ const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
   pointer-events: ${({ isOpen }) => (isOpen ? 'auto' : 'none')};
   transition: opacity 0.3s ease;
   z-index: 999;
@@ -91,11 +65,13 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode, onShowInstruc
     { label: 'Lab 12', value: 'flashcards-lab-twelve.json' },
   ];
 
+  const toggleMenu = () => setIsOpen(!isOpen);
+
   return (
     <>
-      <Overlay isOpen={isOpen} onClick={() => setIsOpen(false)} />
-      {/* Removed MenuToggle usage */}
-      <SidebarContainer isOpen={isOpen}>
+      <Header isOpen={isOpen} toggleMenu={toggleMenu} />
+      <Overlay $isOpen={isOpen} onClick={() => setIsOpen(false)} />
+      <SidebarContainer $isOpen={isOpen}>
         <ButtonGroupContainer>
           <StyledButton onClick={onToggleDarkMode}>
             Toggle Dark Mode

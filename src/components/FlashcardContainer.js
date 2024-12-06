@@ -122,20 +122,9 @@ const FocusButton = styled.button`
   }
 `;
 
-const SwipeInstructions = styled.div`
-  text-align: center;
-  margin: 1rem 0;
-  font-size: 1rem;
-  color: ${({ theme }) => theme.text};
-  opacity: 0.9;
-  padding: 0.5rem;
-  background: ${({ theme }) => theme.surface};
-  border-radius: 0.5rem;
-
-  @media (max-width: 768px) {
-    font-size: 0.85rem;
-  }
-`;
+// const SwipeInstructions = styled.div`
+//   // ...existing styles...
+// `;
 
 const ProgressIndicator = styled.div`
   position: absolute;

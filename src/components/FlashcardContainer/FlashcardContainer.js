@@ -170,21 +170,21 @@ const ModalButton = styled.button`
   }
 `;
 
-// Add styled component for the Review Button
-const ReviewButton = styled.button`
-  padding: 0.5rem 1rem;
-  background: ${({ theme }) => theme.accent};
-  color: ${({ theme }) => theme.surface};
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 1rem;
+// Remove the ReviewButton styled component
+// const ReviewButton = styled.button`
+//   padding: 0.5rem 1rem;
+//   background: ${({ theme }) => theme.accent};
+//   color: ${({ theme }) => theme.surface};
+//   border: none;
+//   border-radius: 4px;
+//   cursor: pointer;
+//   font-size: 1rem;
+//   margin-top: 1rem;
 
-  &:hover {
-    background: ${({ theme }) => theme.secondary};
-  }
-`;
+//   &:hover {
+//     background: ${({ theme }) => theme.secondary};
+//   }
+// `;
 
 function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
   const [flashcardsData, setFlashcardsData] = useState([]);
@@ -255,16 +255,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
     setCurrentCardIndex(prev => prev + 1);
   }, [currentCardIndex, flashcardsData]);
 
-  useEffect(() => {
-    if (currentCardIndex >= flashcardsData.length) {
-      if (missedCards.length > 0) {
-        setNotification(`Reviewing missed cards. You missed ${missedCards.length} cards.`);
-      } else if (reviewMode && missedCards.length === 0) {
-        setNotification('All cards answered correctly!');
-      }
-    }
-  }, [currentCardIndex, flashcardsData.length, missedCards.length, reviewMode]);
-
   const startReviewMode = useCallback(() => {
     if (missedCards.length > 0) {
       setFlashcardsData(missedCards);
@@ -276,6 +266,17 @@ function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
       setNotification('No missed cards to review!');
     }
   }, [missedCards]);
+
+  useEffect(() => {
+    if (currentCardIndex >= flashcardsData.length) {
+      if (missedCards.length > 0) {
+        setNotification(`Reviewing missed cards. You missed ${missedCards.length} cards.`);
+        startReviewMode(); // Automatically start review mode
+      } else if (reviewMode && missedCards.length === 0) {
+        setNotification('All cards answered correctly!');
+      }
+    }
+  }, [currentCardIndex, flashcardsData.length, missedCards.length, reviewMode, startReviewMode]);
 
   const handleReset = () => {
     setNotification(''); // Clear notification state
@@ -306,11 +307,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
         <NotificationModal>
           <p>{notification}</p>
           <ModalButtons>
-            {missedCards.length > 0 ? (
-              <ModalButton onClick={startReviewMode}>Continue</ModalButton>
-            ) : (
-              <ModalButton onClick={handleReset}>Reset</ModalButton>
-            )}
+            <ModalButton onClick={handleReset}>Reset</ModalButton>
           </ModalButtons>
         </NotificationModal>
       )} {/* Display notification */}
@@ -332,12 +329,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
           onDontKnowIt={handleDontKnowIt}
           $focusMode={focusMode}  // Pass the focusMode prop to Flashcard
         />
-      )}
-      {/* Add the Review Missed Cards Button */}
-      {!reviewMode && missedCards.length > 0 && (
-        <ReviewButton onClick={startReviewMode}>
-          Review Missed Cards
-        </ReviewButton>
       )}
     </Container>
   );

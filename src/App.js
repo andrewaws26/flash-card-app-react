@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme } from './theme';
 import ButtonGroup from './components/ButtonGroup';
@@ -64,8 +64,9 @@ function App() {
     setTimeout(() => setCurrentSection('exam-4.json'), 0);
   };
 
-  const handleStatsUpdate = (total, correct, incorrect) =>
-    setStats({ totalCards: total, correctAnswers: correct, incorrectAnswers: incorrect });
+  const handleStatsUpdate = useCallback((total, correct, incorrect) =>
+    setStats({ totalCards: total, correctAnswers: correct, incorrectAnswers: incorrect })
+  , []);
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>

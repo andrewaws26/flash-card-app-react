@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
-import Flashcard from './Flashcard';
+import Flashcard from '../Flashcard'; // Ensure Flashcard is correctly imported
 import styled from 'styled-components';
-import Spinner from './Spinner';
-import Counters from './Counters';  // Verify this import path is correct
+import Spinner from '../Spinner'; // Ensure Spinner is correctly imported
+import Counters from '../Counters'; // Ensure Counters is correctly imported
 
 const Container = styled.div`
   display: flex;
@@ -134,7 +133,60 @@ const ProgressIndicator = styled.div`
   opacity: 0.8;
 `;
 
-function FlashcardContainer({ currentSection, onStatsUpdate }) {
+const NotificationModal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: ${({ theme }) => theme.surface};
+  color: ${({ theme }) => theme.text};
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: ${({ theme }) => theme.shadow};
+  z-index: 3000;
+  text-align: center;
+  max-width: 90%;
+  width: 400px;
+`;
+
+const ModalButtons = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+`;
+
+const ModalButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  background: ${({ theme }) => theme.accent};
+  color: ${({ theme }) => theme.surface};
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+
+  &:hover {
+    background: ${({ theme }) => theme.secondary};
+  }
+`;
+
+// Add styled component for the Review Button
+const ReviewButton = styled.button`
+  padding: 0.5rem 1rem;
+  background: ${({ theme }) => theme.accent};
+  color: ${({ theme }) => theme.surface};
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+
+  &:hover {
+    background: ${({ theme }) => theme.secondary};
+  }
+`;
+
+function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
   const [flashcardsData, setFlashcardsData] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
@@ -142,9 +194,14 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
   const [missedCards, setMissedCards] = useState([]);
   const [loading, setLoading] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [reviewMode, setReviewMode] = useState(false); // Add reviewMode state
+  const [notification, setNotification] = useState(''); // Add notification state
 
   const shuffleArray = (array) => {
+    if (!Array.isArray(array) || array.length === 0) {
+      console.error('Invalid array length');
+      return [];
+    }
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -159,6 +216,9 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
       const response = await fetch(`${process.env.PUBLIC_URL}/data/${section}`);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error('Invalid data format or empty data');
+      }
       setFlashcardsData(shuffleArray(data));
       setCurrentCardIndex(0);
       setCorrectAnswers(0);
@@ -179,12 +239,6 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     onStatsUpdate(flashcardsData.length, correctAnswers, incorrectAnswers);
   }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const handleKnowIt = () => {
     setCorrectAnswers(correctAnswers + 1);
     setCurrentCardIndex(currentCardIndex + 1);
@@ -196,113 +250,36 @@ function FlashcardContainer({ currentSection, onStatsUpdate }) {
     setCurrentCardIndex(currentCardIndex + 1);
   };
 
-  const toggleFocusMode = () => setFocusMode(!focusMode);
-
-  return (
-    <Container $isMobile={isMobile} $focusMode={focusMode}>
-      <FocusButtonContainer $focusMode={focusMode}>
-        <FocusButton onClick={toggleFocusMode} $focusMode={focusMode}>
-          <span>{focusMode ? '⇲' : '⇱'}</span>
-        </FocusButton>
-      </FocusButtonContainer>
-      <ProgressIndicator>
-        {currentCardIndex + 1} of {flashcardsData.length}
-      </ProgressIndicator>
-      {!focusMode && (
-        <Counters 
-          totalCards={flashcardsData.length}
-          correctAnswers={correctAnswers}
-          incorrectAnswers={incorrectAnswers}
-          $focusMode={focusMode}
-        />
-      )}
-      {loading ? (
-        <Spinner />
-      ) : flashcardsData.length === 0 ? (
-        <div>No flashcards found. Please try again.</div>
-      ) : currentCardIndex >= flashcardsData.length ? (
-        <Spinner />
-      ) : flashcardsData.length === 0 ? (
-        <div>No flashcards found. Please try again.</div>
-      ) : currentCardIndex >= flashcardsData.length ? (
-        <div>All cards completed! Click Reset to start over.</div>
-      ) : (
-        <Flashcard
-          key={currentCardIndex} // Add unique key to reset Flashcard state
-          data={flashcardsData[currentCardIndex]}
-          onKnowIt={handleKnowIt}
-          onDontKnowIt={handleDontKnowIt}
-          $focusMode={focusMode}  // Pass the focusMode prop to Flashcard
-        />
-      )}
-    </Container>
-  );
-}
-
-export default FlashcardContainer;
-import React, { useState, useEffect, useCallback } from 'react';
-import Flashcard from './Flashcard';
-import Spinner from './Spinner';
-import Counters from './Counters';
-
-  const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
-  const [missedCards, setMissedCards] = useState([]);
-  const [loading, setLoading] = useState(false);
-    for (let i = newArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  // Modify the useEffect to handle continuous review until all cards are correct
+  useEffect(() => {
+    if (currentCardIndex >= flashcardsData.length && missedCards.length > 0) {
+      setNotification(`Reviewing missed cards. You missed ${missedCards.length} cards.`);
+    } else if (currentCardIndex >= flashcardsData.length && reviewMode && missedCards.length === 0) {
+      setNotification('All cards answered correctly!');
     }
-    return newArray;
-  };
+  }, [currentCardIndex, flashcardsData.length, missedCards, reviewMode]);
 
-  const loadFlashcards = useCallback(async (section) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${process.env.PUBLIC_URL}/data/${section}`);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      setFlashcardsData(shuffleArray(data));
-      setCurrentCardIndex(0);
-      setCorrectAnswers(0);
-      setIncorrectAnswers(0);
+  const startReviewMode = () => {
+    if (missedCards.length > 0) {
+      setFlashcardsData(missedCards);
       setMissedCards([]);
-    } catch (error) {
-      console.error('Error loading flashcards:', error);
-    } finally {
-      setLoading(false);
+      setCurrentCardIndex(0);
+      setReviewMode(true);
+      setNotification('');
+    } else {
+      setNotification('No missed cards to review!');
     }
-  }, []);
-
-  useEffect(() => {
-    if (currentSection) loadFlashcards(currentSection);
-  }, [currentSection, loadFlashcards]);
-
-  useEffect(() => {
-    onStatsUpdate(flashcardsData.length, correctAnswers, incorrectAnswers);
-  }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const handleKnowIt = () => {
-    setCorrectAnswers(correctAnswers + 1);
-    setCurrentCardIndex(currentCardIndex + 1);
   };
 
-  const handleDontKnowIt = () => {
-    setIncorrectAnswers(incorrectAnswers + 1);
-    setMissedCards([...missedCards, flashcardsData[currentCardIndex]]);
-    setCurrentCardIndex(currentCardIndex + 1);
+  const handleReset = () => {
+    setNotification(''); // Clear notification state
+    onReset();
   };
 
   const toggleFocusMode = () => setFocusMode(!focusMode);
 
   return (
-    <Container $isMobile={isMobile} $focusMode={focusMode}>
+    <Container $focusMode={focusMode}>
       <FocusButtonContainer $focusMode={focusMode}>
         <FocusButton onClick={toggleFocusMode} $focusMode={focusMode}>
           <span>{focusMode ? '⇲' : '⇱'}</span>
@@ -319,16 +296,28 @@ import Counters from './Counters';
           $focusMode={focusMode}
         />
       )}
+      {notification && (
+        <NotificationModal>
+          <p>{notification}</p>
+          <ModalButtons>
+            {missedCards.length > 0 ? (
+              <ModalButton onClick={startReviewMode}>Continue</ModalButton>
+            ) : (
+              <ModalButton onClick={handleReset}>Reset</ModalButton>
+            )}
+          </ModalButtons>
+        </NotificationModal>
+      )} {/* Display notification */}
       {loading ? (
         <Spinner />
       ) : flashcardsData.length === 0 ? (
         <div>No flashcards found. Please try again.</div>
       ) : currentCardIndex >= flashcardsData.length ? (
-        <Spinner />
-      ) : flashcardsData.length === 0 ? (
-        <div>No flashcards found. Please try again.</div>
-      ) : currentCardIndex >= flashcardsData.length ? (
-        <div>All cards completed! Click Reset to start over.</div>
+        reviewMode ? (
+          <div></div>
+        ) : (
+          <div></div>
+        )
       ) : (
         <Flashcard
           key={currentCardIndex} // Add unique key to reset Flashcard state
@@ -338,17 +327,14 @@ import Counters from './Counters';
           $focusMode={focusMode}  // Pass the focusMode prop to Flashcard
         />
       )}
+      {/* Add the Review Missed Cards Button */}
+      {!reviewMode && missedCards.length > 0 && (
+        <ReviewButton onClick={startReviewMode}>
+          Review Missed Cards
+        </ReviewButton>
+      )}
     </Container>
   );
 }
 
 export default FlashcardContainer;
-  const [focusMode, setFocusMode] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  const shuffleArray = (array) => {
-    const newArray = [...array];
-function FlashcardContainer({ currentSection, onStatsUpdate }) {
-  const [flashcardsData, setFlashcardsData] = useState([]);
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
-import { Container, FocusButtonContainer, FocusButton, ProgressIndicator } from './FlashcardContainer.styles';

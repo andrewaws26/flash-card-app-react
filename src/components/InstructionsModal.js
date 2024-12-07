@@ -1,4 +1,3 @@
-
 import React from 'react';
 import styled from 'styled-components';
 
@@ -22,27 +21,41 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled.button`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: transparent;
+  background: ${({ theme }) => theme.accent};
+  color: ${({ theme }) => theme.surface};
   border: none;
-  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
   cursor: pointer;
+  margin-top: 1rem;
+
+  &:hover {
+    background: ${({ theme }) => theme.secondary};
+  }
+`;
+
+// Remove the CloseButton styled component
+
+const ModalContainer = styled.div`
+  // ...existing code...
 `;
 
 function InstructionsModal({ onClose }) {
   return (
-    <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>&times;</CloseButton>
-        <h2>Instructions</h2>
-        <p>
-          After revealing the answer, swipe right if you know it, left if you don't.
-          {/* ...additional instructions... */}
-        </p>
-      </ModalContent>
-    </ModalOverlay>
+    <ModalContainer>
+      <ModalOverlay onClick={onClose}>
+        <ModalContent onClick={(e) => e.stopPropagation()}>
+          <h2>Instructions</h2>
+          <p>
+            Tap on a flashcard to reveal the answer. Swipe right if you know it, swipe left if you don't.
+          </p>
+          <p>
+            You will review all the missed cards until you get them right. Keep practicing until all cards are answered correctly.
+          </p>
+          <CloseButton onClick={onClose}>Got it</CloseButton>
+        </ModalContent>
+      </ModalOverlay>
+    </ModalContainer>
   );
 }
 

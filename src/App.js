@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme, darkTheme } from './theme'; // Removed GlobalStyle import
-import ButtonGroup from './components/ButtonGroup';
-import Counters from './components/Counters';
-import FlashcardContainer from './components/FlashcardContainer';
+import { lightTheme, darkTheme } from './theme'; // Ensure lightTheme and darkTheme are correctly imported
+import ButtonGroup from './components/ButtonGroup'; // Ensure ButtonGroup is correctly imported
+import Counters from './components/Counters'; // Ensure Counters is correctly imported
 import './styles/styles.css';
-import { AppContainer, MainContent, Sidebar } from './components/Layout';
+import { AppContainer, MainContent, Sidebar } from './components/Layout'; // Ensure Layout components are correctly imported
 import styled from 'styled-components';
-import { GlobalStyles } from './GlobalStyles'; // Ensure only GlobalStyles is imported
-import InstructionsModal from './components/InstructionsModal'; // Create this component
+import { GlobalStyles } from './GlobalStyles'; // Ensure GlobalStyles is correctly imported
+import InstructionsModal from './components/InstructionsModal'; // Ensure InstructionsModal is correctly imported
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SearchPage from './pages/SearchPage'; // Import SearchPage
+import HomePage from './pages/HomePage'; // Import HomePage
 
 const Header = styled.h1`
   font-size: 2.5rem;
@@ -99,30 +101,41 @@ function App() {
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <GlobalStyles /> {/* Use only GlobalStyles */}
-      <AppContainer basename={process.env.PUBLIC_URL}>
-        <Sidebar>
-          <ButtonGroup
-            onToggleDarkMode={handleToggleDarkMode}
-            onSectionChange={handleSectionChange}
-            onReset={handleReset}
-            onShowInstructions={handleShowInstructions}
-          />
-        </Sidebar>
-        <MainContent>
-          <ContentArea>
-            <Header>Anatomy Flashcards</Header>
-            <FlashcardContainer 
-              currentSection={currentSection}
-              onStatsUpdate={handleStatsUpdate}
+      <Router>
+        <AppContainer basename={process.env.PUBLIC_URL}>
+          <Sidebar>
+            <ButtonGroup
+              onToggleDarkMode={handleToggleDarkMode}
+              onSectionChange={handleSectionChange}
+              onReset={handleReset}
+              onShowInstructions={handleShowInstructions}
             />
-          </ContentArea>
-          <Counters 
-            totalCards={totalCards}
-            correctAnswers={correctAnswers}
-            incorrectAnswers={incorrectAnswers}
-          />
-        </MainContent>
-      </AppContainer>
+          </Sidebar>
+          <MainContent>
+            <ContentArea>
+              <Header>Anatomy Flashcards</Header>
+              <Routes>
+                <Route 
+                  path="/" 
+                  element={
+                    <HomePage 
+                      currentSection={currentSection}
+                      onStatsUpdate={handleStatsUpdate}
+                      onReset={handleReset}
+                    />
+                  } 
+                />
+                <Route path="/search" element={<SearchPage />} /> {/* Add SearchPage Route */}
+              </Routes>
+            </ContentArea>
+            <Counters 
+              totalCards={totalCards}
+              correctAnswers={correctAnswers}
+              incorrectAnswers={incorrectAnswers}
+            />
+          </MainContent>
+        </AppContainer>
+      </Router>
       {showInstructions && (
         <InstructionsModal onClose={handleCloseInstructions} />
       )}

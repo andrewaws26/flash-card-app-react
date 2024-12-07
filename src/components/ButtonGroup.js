@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { StyledButton } from '../styles/SharedComponents';
-import Header from './Header'; // Import the Header component
+import Header from './Header'; // Ensure Header is correctly imported
+import { Link } from 'react-router-dom';
 
 const ButtonGroupContainer = styled.div`
   display: flex;
@@ -19,10 +20,11 @@ const SidebarContainer = styled.div`
   background: ${({ theme }) => theme.surface};
   padding: 2rem 1rem;
   width: 250px;
-  min-height: 100vh;
+  min-height: calc(100vh - 4rem); // Adjust height to not overlap with header
   position: fixed;
   left: ${({ $isOpen }) => ($isOpen ? '0' : '-250px')};
-  top: 4rem;
+  top: 4rem; // Ensure it starts below the header
+  margin-top: 4rem; // Add margin to ensure it does not overlap with the header
   transition: left 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
   box-shadow: ${({ isOpen, theme }) => (isOpen ? `4px 0 12px ${theme.shadow}` : 'none')};
   border-right: 1px solid ${({ theme }) => theme.border};
@@ -31,7 +33,8 @@ const SidebarContainer = styled.div`
   @media (max-width: 768px) {
     width: 200px;
     left: ${({ $isOpen }) => ($isOpen ? '0' : '-200px')};
-    top: 4rem;
+    top: 4rem; // Ensure it starts below the header
+    margin-top: 4rem; // Add margin to ensure it does not overlap with the header
   }
 `;
 
@@ -61,29 +64,45 @@ function ButtonGroup({ onSectionChange, onReset, onToggleDarkMode, onShowInstruc
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  const handleOptionClick = (callback) => {
+    callback();
+    setIsOpen(false);
+  };
+
   return (
     <>
-      <Header isOpen={isOpen} toggleMenu={toggleMenu} />
+      <Header 
+        isOpen={isOpen} 
+        toggleMenu={toggleMenu} 
+        toggleDarkMode={onToggleDarkMode}
+        onShowInstructions={onShowInstructions}
+      />
       <Overlay $isOpen={isOpen} onClick={() => setIsOpen(false)} />
       <SidebarContainer $isOpen={isOpen}>
         <ButtonGroupContainer>
-          <StyledButton onClick={onToggleDarkMode}>
+          <StyledButton onClick={() => handleOptionClick(onToggleDarkMode)}>
             Toggle Dark Mode
           </StyledButton>
-          <StyledButton onClick={onReset}>
+          <StyledButton onClick={() => handleOptionClick(onReset)}>
             Reset
           </StyledButton>
-          <StyledButton onClick={onShowInstructions}>
+          <StyledButton onClick={() => handleOptionClick(onShowInstructions)}>
             Instructions
           </StyledButton>
           {sections.map((section) => (
             <StyledButton
               key={section.value}
-              onClick={() => onSectionChange(section.value)}
+              onClick={() => handleOptionClick(() => onSectionChange(section.value))}
             >
               {section.label}
             </StyledButton>
           ))}
+          <Link to="/" onClick={() => setIsOpen(false)}> {/* Add Flashcards Button */}
+            <StyledButton>Flashcards</StyledButton>
+          </Link>
+          <Link to="/search" onClick={() => setIsOpen(false)}>
+            <StyledButton>Search</StyledButton> {/* Add Search Button */}
+          </Link>
         </ButtonGroupContainer>
       </SidebarContainer>
     </>

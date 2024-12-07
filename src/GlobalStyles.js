@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 // Modify the GlobalStyles to correctly apply the theme background
 
 export const GlobalStyles = createGlobalStyle`
-  /* Remove @import and use link tag in index.html instead */
+  // ...existing global styles...
   
   html, body {
     margin: 0;

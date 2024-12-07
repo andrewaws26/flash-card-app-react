@@ -64,7 +64,7 @@ function Header({
 }) {
   return (
     <HeaderContainer>
-      <Title>Anatomy Flashcards</Title>
+      <Title>Nerdy Nurse</Title>
       <Nav>
         {/* Menu Button */}
         <IconButton

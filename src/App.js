@@ -8,7 +8,7 @@ import { AppContainer, MainContent, Sidebar } from './components/Layout'; // Ens
 import styled from 'styled-components';
 import { GlobalStyles } from './GlobalStyles'; // Ensure GlobalStyles is correctly imported
 import InstructionsModal from './components/InstructionsModal'; // Ensure InstructionsModal is correctly imported
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import SearchPage from './pages/SearchPage'; // Import SearchPage
 import HomePage from './pages/HomePage'; // Import HomePage
 
@@ -40,7 +40,6 @@ const ContentArea = styled.div`
   align-items: center;
 
   @media (max-width: 768px) {
-   
     position: relative; // Add for absolute positioning context
   }
 `;
@@ -127,12 +126,12 @@ function App() {
                 />
                 <Route path="/search" element={<SearchPage />} /> {/* Add SearchPage Route */}
               </Routes>
+              <LocationAwareCounters 
+                totalCards={totalCards}
+                correctAnswers={correctAnswers}
+                incorrectAnswers={incorrectAnswers}
+              />
             </ContentArea>
-            <Counters 
-              totalCards={totalCards}
-              correctAnswers={correctAnswers}
-              incorrectAnswers={incorrectAnswers}
-            />
           </MainContent>
         </AppContainer>
       </Router>
@@ -141,6 +140,17 @@ function App() {
       )}
     </ThemeProvider>
   );
+}
+
+function LocationAwareCounters({ totalCards, correctAnswers, incorrectAnswers }) {
+  const location = useLocation();
+  return location.pathname === '/' ? (
+    <Counters 
+      totalCards={totalCards}
+      correctAnswers={correctAnswers}
+      incorrectAnswers={incorrectAnswers}
+    />
+  ) : null;
 }
 
 export default App;

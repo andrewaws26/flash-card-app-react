@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Fuse from 'fuse.js';
 
 // ============ Styled Components ============
 
@@ -33,16 +34,6 @@ const SearchBarContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
-`;
-
-const SearchFieldSelect = styled.select`
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 4px;
-  min-width: 120px;
-  background: ${({ theme }) => theme.surface};
-  color: ${({ theme }) => theme.text};
 `;
 
 const SearchInput = styled.input`
@@ -94,6 +85,19 @@ const Error = styled.div`
   font-weight: bold;
 `;
 
+const DidYouMean = styled.div`
+  margin-top: 1rem;
+  text-align: center;
+  color: ${({ theme }) => theme.textSecondary};
+  font-style: italic;
+
+  span {
+    color: ${({ theme }) => theme.accent};
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
 const ResultsList = styled.ul`
   padding-left: 0;
   list-style: none;
@@ -120,9 +124,11 @@ const ItemHeader = styled.div`
   justify-content: space-between;
 `;
 
-const Chevron = styled.span`
+const Chevron = styled.span.attrs((props) => ({
+  'aria-expanded': props.$expanded,
+}))`
   font-size: 1.5rem;
-  transform: rotate(${props => (props.expanded ? '90deg' : '0deg')});
+  transform: rotate(${props => (props.$expanded ? '90deg' : '0deg')});
   transition: transform 0.2s ease;
   color: ${({ theme }) => theme.textSecondary};
 `;
@@ -136,13 +142,13 @@ const SectionsList = styled.ul`
 const SectionItem = styled.li`
   cursor: pointer;
   margin-bottom: 0.5rem;
-  background: ${props => (props.selected ? '#d0eaff' : '#eee')};
+  background: ${props => (props.$selected ? '#d0eaff' : '#eee')};
   padding: 0.5rem;
   border-radius: 4px;
   transition: background 0.2s;
 
   &:hover {
-    background: ${props => (props.selected ? '#c3def3' : '#e2e2e2')};
+    background: ${props => (props.$selected ? '#c3def3' : '#e2e2e2')};
   }
 `;
 
@@ -196,12 +202,6 @@ function formatReadableText(text) {
   if (!text) return 'N/A';
   let readable = text.replace(/•\s+/g, '\n• ');
 
-  // Insert headings for known sections
-  
-
-  // Convert ### HEADINGS into <h3> tags
-  
-  
   let lines = readable.split('\n');
   lines = lines.map(line => {
     if (line.trim().startsWith('•')) {
@@ -254,25 +254,37 @@ function removeSecondWarning(html) {
   const secondIndex = lowerHtml.indexOf('warning', firstIndex + 7); // search after first occurrence
   if (secondIndex === -1) return html; // only one occurrence
 
-  // Remove just the second occurrence of the word "warning"
-  console.log('Second warning found and removed.');
   return html.substring(0, secondIndex) + html.substring(secondIndex + 7);
 }
+
+// ============ Example Drug Dictionary for Suggestions ============
+const drugDictionary = [
+  "Tylenol", "Advil", "Ibuprofen", "Aspirin", "Zyrtec", "Xanax", "Lipitor",
+  "Amoxicillin", "Penicillin", "Metformin", "Lisinopril", "Hydroxyzine",
+  "Benadryl", "Zoloft", "Atorvastatin", "Acetaminophen", "Prednisone",
+  "Wellbutrin", "Humira", "Crestor"
+];
+
+const fuse = new Fuse(drugDictionary, {
+  includeScore: true,
+  threshold: 0.5,
+});
 
 // ============ Main Component ============
 
 function SearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchField, setSearchField] = useState('brand');
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  const [rawTotalResults, setRawTotalResults] = useState(0);
   const limit = 10;
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
-  const [expandedItem, setExpandedItem] = useState(null); 
-  const [expandedSection, setExpandedSection] = useState({}); // store state per item
+  const [expandedItem, setExpandedItem] = useState(null);
+  const [expandedSection, setExpandedSection] = useState({});
+  const [suggestion, setSuggestion] = useState(null);
 
   const parseQuery = (query) => {
     const parts = query.trim().split(/\s+/);
@@ -298,39 +310,88 @@ function SearchPage() {
   const handleSearch = async (query, page = 1) => {
     setIsLoading(true);
     setError(null);
+    setSuggestion(null);
+    setSearchResults([]);
+    setRawTotalResults(0);
     const skip = (page - 1) * limit;
-
     const { drugName } = parseQuery(query);
-    const searchFieldParam = searchField === 'brand' ? 'openfda.brand_name' : 'openfda.generic_name';
-    const finalSearchParam = `${dateRange}+AND+${searchFieldParam}:${drugName}`;
 
+    let result;
+
+    // 1. Exact match attempt
+    result = await attemptSearch(drugName, page, skip, false);
+
+    // 2. If exact match not found and no error, try wildcard
+    if (!result.found && !result.error) {
+      result = await attemptSearch(drugName, page, skip, true);
+    }
+
+    // Set error state if there was an error
+    if (result.error) {
+      setError(result.error);
+    }
+
+    // 3. If still no results and no error, provide suggestion
+    if (!result.found && !result.error) {
+      provideSuggestion(drugName);
+    }
+
+    setIsLoading(false);
+  };
+
+  const attemptSearch = async (drugName, page, skip, useWildcard) => {
+    const wildcard = useWildcard ? '*' : '';
+    const finalSearchParam = `${dateRange}+AND+(openfda.brand_name:${drugName}${wildcard}+OR+openfda.generic_name:${drugName}${wildcard})`;
     const url = `https://api.fda.gov/drug/label.json?search=${finalSearchParam}&limit=${limit}&skip=${skip}`;
 
     try {
       const response = await fetch(url);
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+        console.warn(`Non-OK response: ${response.status}`);
+        return { found: false, error: null };
       }
 
       const data = await response.json();
-      if (data.results) {
-        setSearchResults(data.results);
-        setTotalResults(data.meta.results.total);
-        setCurrentPage(page);
-      } else {
-        setError('No results found.');
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError(error.message || 'Failed to fetch results');
-    }
+      if (data.results && data.results.length > 0) {
+        // Remove duplicates (case-insensitive)
+        const seen = new Set();
+        const uniqueResults = [];
+        for (const result of data.results) {
+          const drugNames = result.openfda?.brand_name || result.openfda?.generic_name;
+          const displayName = drugNames ? drugNames.join(', ') : 'No Name';
+          const normalizedName = displayName.toLowerCase().trim();
+          if (!seen.has(normalizedName)) {
+            seen.add(normalizedName);
+            uniqueResults.push(result);
+          }
+        }
 
-    setIsLoading(false);
+        setRawTotalResults(data.meta.results.total);
+        setSearchResults(uniqueResults);
+        setTotalResults(uniqueResults.length);
+        setCurrentPage(page);
+        return { found: true, error: null };
+      }
+      return { found: false, error: null };
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      return { found: false, error: err.message || 'Failed to fetch results' };
+    }
+  };
+
+  const provideSuggestion = (query) => {
+    const results = fuse.search(query);
+    if (results.length > 0) {
+      setSuggestion(results[0].item);
+    } else {
+      setSuggestion(null);
+      setError('No results found.');
+    }
   };
 
   const handleNextPage = () => {
-    if (currentPage * limit < totalResults) {
+    if (currentPage * limit < rawTotalResults) {
       handleSearch(currentSearchQuery, currentPage + 1);
     }
   };
@@ -348,27 +409,22 @@ function SearchPage() {
   };
 
   const getSectionsData = (result) => {
-    // Format dosage info
     const dosageInfo = result.dosage_forms_and_strengths
       ? formatField(result.dosage_forms_and_strengths)
       : result.dosage_and_administration
         ? formatField(result.dosage_and_administration)
         : 'N/A';
 
-    // Format indications
     const indications = formatField(result.indications_and_usage);
 
-    // Format warnings and remove second "warning"
     let warnings = formatField(result.warnings);
     warnings = removeSecondWarning(warnings);
 
-    // Format adverse reactions
     let adverseReactions = 'N/A';
     if (result.adverse_reactions) {
       adverseReactions = formatAdverseReactions(result.adverse_reactions);
     }
 
-    // Format contraindications
     const contraindications = formatField(result.contraindications);
 
     return {
@@ -393,22 +449,36 @@ function SearchPage() {
     );
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      setExpandedItem(null);
+      setExpandedSection({});
+      setCurrentSearchQuery(searchQuery);
+      if (searchQuery.trim() !== '') {
+        handleSearch(searchQuery, 1);
+      }
+    }
+  };
+
+  const handleSuggestionClick = (suggestedQuery) => {
+    setSearchQuery(suggestedQuery);
+    setCurrentSearchQuery(suggestedQuery);
+    handleSearch(suggestedQuery, 1);
+  };
+
   return (
     <Container>
-      <Title>Search FDA Drug Labeling (Recent)</Title>
+      <Title>Search FDA Drug Labeling (Since 2020)</Title>
       <Instructions>
-        Enter a drug name, select brand or generic, and click "Search".<br/>
+        Enter a brand or generic drug name and press Enter or click "Search".
       </Instructions>
 
       <SearchBarContainer>
-        <SearchFieldSelect value={searchField} onChange={(e) => setSearchField(e.target.value)}>
-          <option value="brand">Brand Name</option>
-          <option value="generic">Generic Name</option>
-        </SearchFieldSelect>
         <SearchInput
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Enter drug name..."
         />
         <SearchButton
@@ -433,84 +503,88 @@ function SearchPage() {
         <Message>Please enter a search query above.</Message>
       )}
 
-      {!isLoading && !error && searchQuery.trim() !== '' && searchResults.length === 0 && (
+      {!isLoading && !error && searchQuery.trim() !== '' && searchResults.length === 0 && suggestion && (
+        <DidYouMean>
+          Did you mean <span onClick={() => handleSuggestionClick(suggestion)}>{suggestion}</span>?
+        </DidYouMean>
+      )}
+
+      {!isLoading && !error && searchQuery.trim() !== '' && searchResults.length === 0 && !suggestion && (
         <Message>No recent results found for your query.</Message>
       )}
 
-      {searchResults.length > 0 && (
-        <ResultsContainer>
-          <ResultsList>
-            {searchResults.map((result, index) => {
-              const isExpanded = expandedItem === index;
-              const drugNames = searchField === 'brand' ? result.openfda?.brand_name : result.openfda?.generic_name;
-              const displayName = drugNames ? drugNames.join(', ') : 'No Name';
-              const sections = getSectionsData(result);
+      {!isLoading && !error && searchResults.length > 0 && (
+        <>
+          <ResultsContainer>
+            <ResultsList>
+              {searchResults.map((result, index) => {
+                const isExpanded = expandedItem === index;
+                const drugNames = result.openfda?.brand_name || result.openfda?.generic_name;
+                const displayName = drugNames ? drugNames.join(', ') : 'No Name';
+                const sections = getSectionsData(result);
 
-              return (
-                <ListItem 
-                  key={index} 
-                  onClick={() => {
-                    // Toggle the expanded item
-                    if (expandedItem === index) {
-                      // Close if already expanded
-                      setExpandedItem(null);
-                      setExpandedSection({});
-                    } else {
-                      // Open a new item and reset sections
-                      setExpandedItem(index);
-                      setExpandedSection({});
-                    }
-                  }}
+                return (
+                  <ListItem
+                    key={index}
+                    onClick={() => {
+                      if (expandedItem === index) {
+                        setExpandedItem(null);
+                        setExpandedSection({});
+                      } else {
+                        setExpandedItem(index);
+                        setExpandedSection({});
+                      }
+                    }}
+                  >
+                    <ItemHeader>
+                      <strong>{displayName}</strong>
+                      <Chevron $expanded={isExpanded}>▶</Chevron>
+                    </ItemHeader>
+                    {isExpanded && (
+                      <SectionsList>
+                        {Object.keys(sections).map(sectionKey => {
+                          const selected = expandedSection[index] === sectionKey;
+                          return (
+                            <React.Fragment key={sectionKey}>
+                              <SectionItem
+                                $selected={selected}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setExpandedSection(prev => ({
+                                    ...prev,
+                                    [index]: prev[index] === sectionKey ? null : sectionKey
+                                  }));
+                                }}
+                              >
+                                {sections[sectionKey].label}
+                              </SectionItem>
+                              {selected && renderSectionContent(sections, index, sectionKey)}
+                            </React.Fragment>
+                          );
+                        })}
+                      </SectionsList>
+                    )}
+                  </ListItem>
+                );
+              })}
+            </ResultsList>
+
+            {rawTotalResults > limit && (
+              <Pagination>
+                <button onClick={handlePrevPage} disabled={currentPage === 1}>
+                  Previous
+                </button>
+                <span>Page {currentPage}</span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage * limit >= rawTotalResults}
                 >
-                  <ItemHeader>
-                    <strong>{displayName}</strong>
-                    <Chevron expanded={isExpanded}>▶</Chevron>
-                  </ItemHeader>
-                  {isExpanded && (
-                    <SectionsList>
-                      {Object.keys(sections).map(sectionKey => {
-                        const selected = expandedSection[index] === sectionKey;
-                        return (
-                          <React.Fragment key={sectionKey}>
-                            <SectionItem
-                              selected={selected}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                // Toggle this section
-                                setExpandedSection(prev => ({
-                                  ...prev,
-                                  [index]: prev[index] === sectionKey ? null : sectionKey
-                                }));
-                              }}
-                            >
-                              {sections[sectionKey].label}
-                            </SectionItem>
-                            {selected && renderSectionContent(sections, index, sectionKey)}
-                          </React.Fragment>
-                        );
-                      })}
-                    </SectionsList>
-                  )}
-                </ListItem>
-              );
-            })}
-          </ResultsList>
-
-          {totalResults > limit && (
-            <Pagination>
-              <button onClick={handlePrevPage} disabled={currentPage === 1}>
-                Previous
-              </button>
-              <span>Page {currentPage}</span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage * limit >= totalResults}
-              >
-                Next
-              </button>
-            </Pagination>
-          )}
-        </ResultsContainer>
+                  Next
+                </button>
+              </Pagination>
+            )}
+          </ResultsContainer>
+        </>
       )}
     </Container>
   );

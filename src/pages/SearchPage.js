@@ -630,7 +630,7 @@ function SearchPage() {
 
   return (
     <Container>
-      <Title>Search FDA Drug Labeling (Since 2020)</Title>
+      <Title>Search FDA Drug Labeling</Title>
       <Instructions>
         Enter a brand or generic drug name and press Enter or click "Search".
       </Instructions>

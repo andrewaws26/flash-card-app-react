@@ -210,8 +210,7 @@ const Term = styled.h2`
   }
 
   @media (max-width: 768px) {
-    margin: 0;
-    padding: 1rem;
+    display: none; // Hide on mobile
   }
 `;
 

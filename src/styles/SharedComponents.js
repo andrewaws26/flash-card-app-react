@@ -50,6 +50,18 @@ export const StyledLinkButton = styled(BaseButton).attrs({ as: Link })`
     transform: translateY(-2px);
     box-shadow: 0 4px 8px ${({ theme }) => theme.hoverShadow};
   }
+
+  .link-text {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  &.hide-on-mobile {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
 `;
 
 // IconButton: For icon-only buttons (e.g., menu toggle)

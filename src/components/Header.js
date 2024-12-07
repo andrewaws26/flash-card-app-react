@@ -40,7 +40,14 @@ const Title = styled.h1`
   color: ${({ theme }) => theme.accent};
 
   @media (max-width: 768px) {
-    display: none; /* Hide title on mobile to save space */
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+    display: block; /* Show title on mobile */
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+    margin: 0.25rem 0;
   }
 `;
 
@@ -94,13 +101,13 @@ function Header({
         </IconButton>
 
         {/* Search and Flashcards as StyledLinkButton */}
-        <StyledLinkButton to="/search" aria-label="Search" title="Search">
+        <StyledLinkButton className="hide-on-mobile" to="/search" aria-label="Search" title="Search">
           <FaSearch style={{ marginRight: '0.5rem' }} />
-          Search
+          <span className="link-text">Search</span>
         </StyledLinkButton>
-        <StyledLinkButton to="/flashcards" aria-label="Flashcards" title="Go to Flashcards">
+        <StyledLinkButton className="hide-on-mobile" to="/flashcards" aria-label="Flashcards" title="Go to Flashcards">
           <FaBook style={{ marginRight: '0.5rem' }} />
-          Flashcards
+          <span className="link-text">Flashcards</span>
         </StyledLinkButton>
       </Nav>
     </HeaderContainer>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme } from './theme';
 import ButtonGroup from './components/ButtonGroup';
@@ -8,7 +8,7 @@ import { AppContainer, MainContent, Sidebar } from './components/Layout';
 import styled from 'styled-components';
 import { GlobalStyles } from './GlobalStyles';
 import InstructionsModal from './components/InstructionsModal';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import SearchPage from './pages/SearchPage';
 import HomePage from './pages/HomePage';
 
@@ -29,6 +29,11 @@ const Header = styled.h1`
     background: ${({ theme }) => theme.background};
     padding: 1rem;
     z-index: 2;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+    padding: 0.5rem;
   }
 `;
 
@@ -64,9 +69,8 @@ function App() {
     setTimeout(() => setCurrentSection('exam-4.json'), 0);
   };
 
-  const handleStatsUpdate = useCallback((total, correct, incorrect) =>
-    setStats({ totalCards: total, correctAnswers: correct, incorrectAnswers: incorrect })
-  , []);
+  const handleStatsUpdate = (total, correct, incorrect) =>
+    setStats({ totalCards: total, correctAnswers: correct, incorrectAnswers: incorrect });
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>

@@ -20,20 +20,7 @@ const Header = styled.h1`
   text-align: center;
 
   @media (max-width: 768px) {
-    font-size: 1.75rem;
-    margin: 1rem 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: ${({ theme }) => theme.background};
-    padding: 1rem;
-    z-index: 2;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.5rem;
-    padding: 0.5rem;
+    display: none; // Hide on mobile
   }
 `;
 

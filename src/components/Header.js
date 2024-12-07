@@ -40,14 +40,7 @@ const Title = styled.h1`
   color: ${({ theme }) => theme.accent};
 
   @media (max-width: 768px) {
-    font-size: 1.5rem;
-    margin: 0.5rem 0;
-    display: block; /* Show title on mobile */
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.2rem;
-    margin: 0.25rem 0;
+    display: none; // Hide on mobile
   }
 `;
 

@@ -201,16 +201,16 @@ const SectionItem = styled.li`
   cursor: pointer;
   margin-bottom: 0.5rem;
   background: ${({ theme, $selected }) =>
-    $selected ? theme.selectedBackground : theme.itemBackground};
+    $selected ? theme.accentLight : theme.surface};
   color: ${({ theme }) => theme.text};
   padding: 0.5rem;
   border-radius: 4px;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    background: ${({ theme, $selected }) =>
-      $selected ? theme.selectedHover : theme.hover};
-    color: ${({ theme }) => theme.hoverText};
+    background: ${({ theme }) => theme.accent};
+    color: ${({ theme }) => theme.text};
+    box-shadow: ${({ theme }) => theme.hoverShadow};
   }
 `;
 

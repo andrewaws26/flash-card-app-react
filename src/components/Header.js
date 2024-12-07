@@ -1,108 +1,108 @@
-import React from 'react'; // Removed useState import
-import styled from 'styled-components';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+// src/components/Header.js
 
-const HeaderContainer = styled.div`
+import React from 'react';
+import styled from 'styled-components';
+import {
+  FaBars,
+  FaTimes,
+  FaMoon,
+  FaQuestionCircle,
+  FaSearch,
+  FaBook,
+} from 'react-icons/fa';
+import { IconButton, StyledLinkButton } from '../styles/SharedComponents';
+
+// Header Container
+const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: ${({ theme }) => theme.primary};
-  color: ${({ theme }) => theme.text}; // Change to theme.text for better visibility
-  padding: 1rem;
+  color: ${({ theme }) => theme.text};
+  padding: 1rem 2rem;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000;
-  box-shadow: ${({ theme }) => theme.shadow};
+  z-index: 1100; /* Higher than sidebar */
+  box-shadow: 0 2px 4px ${({ theme }) => theme.shadow};
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-    padding: 0.5rem;
-    justify-content: center; // Center the icons
+    padding: 0.5rem 1rem;
   }
 `;
 
-const MenuButton = styled.button`
-  background: none;
-  border: none;
-  color: inherit;
-  font-size: 1.5rem;
-  cursor: pointer;
-
-  @media (max-width: 768px) {
-    margin-bottom: 0.5rem;
-  }
-`;
-
-const ToggleButton = styled.button`
-  background: none;
-  border: none;
-  color: purple; // Ensure color is purple
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin-left: 1rem;
-
-  @media (max-width: 768px) {
-    margin-left: 0;
-  }
-`;
-
-const HelpButton = styled(ToggleButton)`
-  color: ${({ theme }) => theme.accent};
-`;
-
+// Title styled component
 const Title = styled.h1`
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: bold;
+  color: ${({ theme }) => theme.accent};
+
   @media (max-width: 768px) {
-    display: none; // Hide title on mobile
+    display: none; /* Hide title on mobile to save space */
   }
 `;
 
-// Removed unused SearchInput
-
-const SearchButton = styled(Link)`
-  background: none;
-  border: none;
-  color: inherit;
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin-left: 1rem;
-  text-decoration: none;
+// Navigation Container
+const Nav = styled.nav`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 
   @media (max-width: 768px) {
-    display: none; // Hide the search button on mobile devices
-  }
-
-  &:hover {
-    color: ${({ theme }) => theme.accent}; // Change color on hover for better visibility
+    gap: 1rem;
   }
 `;
 
-// Removed unused SearchButtonOld
-
-// Removed unused ResultsContainer
-
-// Removed unused SortSelect
-
-// Removed unused SearchFieldSelect
-
-function Header({ isOpen, toggleMenu, toggleDarkMode, onShowInstructions }) {
+// Header Component
+function Header({
+  isMenuOpen,
+  toggleMenu,
+  toggleDarkMode,
+  showInstructions,
+}) {
   return (
     <HeaderContainer>
-      <Title>Flashcard App</Title>
-      <div>
-        <MenuButton onClick={toggleMenu}>
-          {isOpen ? '✖' : '☰'}
-        </MenuButton>
-        <ToggleButton onClick={toggleDarkMode}>
-          🌙
-        </ToggleButton>
-        <HelpButton onClick={onShowInstructions}>
-          ❔
-        </HelpButton>
-        <SearchButton to="/search" aria-label="Search">🔍</SearchButton> {/* Add Search Icon Button */}
-      </div>
+      <Title>Anatomy Flashcards</Title>
+      <Nav>
+        {/* Menu Button */}
+        <IconButton
+          onClick={toggleMenu}
+          aria-label={isMenuOpen ? 'Close Menu' : 'Open Menu'}
+          title={isMenuOpen ? 'Close Menu' : 'Open Menu'}
+        >
+          {isMenuOpen ? <FaTimes /> : <FaBars />}
+        </IconButton>
+
+        {/* Dark Mode Toggle */}
+        <IconButton
+          onClick={toggleDarkMode}
+          aria-label="Toggle Dark Mode"
+          title="Toggle Dark Mode"
+        >
+          <FaMoon />
+        </IconButton>
+
+        {/* Help Button */}
+        <IconButton
+          onClick={showInstructions}
+          aria-label="Help"
+          title="Help"
+        >
+          <FaQuestionCircle />
+        </IconButton>
+
+        {/* Search and Flashcards as StyledLinkButton */}
+        <StyledLinkButton to="/search" aria-label="Search" title="Search">
+          <FaSearch style={{ marginRight: '0.5rem' }} />
+          Search
+        </StyledLinkButton>
+        <StyledLinkButton to="/flashcards" aria-label="Flashcards" title="Go to Flashcards">
+          <FaBook style={{ marginRight: '0.5rem' }} />
+          Flashcards
+        </StyledLinkButton>
+      </Nav>
     </HeaderContainer>
   );
 }

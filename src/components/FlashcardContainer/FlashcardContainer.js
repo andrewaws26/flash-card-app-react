@@ -197,9 +197,8 @@ function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
   const [reviewMode, setReviewMode] = useState(false); // Add reviewMode state
   const [notification, setNotification] = useState(''); // Add notification state
 
-  const shuffleArray = (array) => {
+  const shuffleArray = useCallback((array) => {
     if (!Array.isArray(array) || array.length === 0) {
-      console.error('Invalid array length');
       return [];
     }
     const newArray = [...array];
@@ -208,9 +207,10 @@ function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
       [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
     return newArray;
-  };
+  }, []);
 
   const loadFlashcards = useCallback(async (section) => {
+    if (!section) return;
     setLoading(true);
     try {
       const response = await fetch(`${process.env.PUBLIC_URL}/data/${section}`);
@@ -224,42 +224,48 @@ function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
       setCorrectAnswers(0);
       setIncorrectAnswers(0);
       setMissedCards([]);
+      setReviewMode(false);
     } catch (error) {
       console.error('Error loading flashcards:', error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [shuffleArray]);
 
   useEffect(() => {
-    if (currentSection) loadFlashcards(currentSection);
+    if (currentSection) {
+      loadFlashcards(currentSection);
+    }
   }, [currentSection, loadFlashcards]);
 
   useEffect(() => {
-    onStatsUpdate(flashcardsData.length, correctAnswers, incorrectAnswers);
+    if (flashcardsData.length > 0) {
+      onStatsUpdate(flashcardsData.length, correctAnswers, incorrectAnswers);
+    }
   }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
 
-  const handleKnowIt = () => {
-    setCorrectAnswers(correctAnswers + 1);
-    setCurrentCardIndex(currentCardIndex + 1);
-  };
+  const handleKnowIt = useCallback(() => {
+    setCorrectAnswers(prev => prev + 1);
+    setCurrentCardIndex(prev => prev + 1);
+  }, []);
 
-  const handleDontKnowIt = () => {
-    setIncorrectAnswers(incorrectAnswers + 1);
-    setMissedCards([...missedCards, flashcardsData[currentCardIndex]]);
-    setCurrentCardIndex(currentCardIndex + 1);
-  };
+  const handleDontKnowIt = useCallback(() => {
+    setIncorrectAnswers(prev => prev + 1);
+    setMissedCards(prev => [...prev, flashcardsData[currentCardIndex]]);
+    setCurrentCardIndex(prev => prev + 1);
+  }, [currentCardIndex, flashcardsData]);
 
-  // Modify the useEffect to handle continuous review until all cards are correct
   useEffect(() => {
-    if (currentCardIndex >= flashcardsData.length && missedCards.length > 0) {
-      setNotification(`Reviewing missed cards. You missed ${missedCards.length} cards.`);
-    } else if (currentCardIndex >= flashcardsData.length && reviewMode && missedCards.length === 0) {
-      setNotification('All cards answered correctly!');
+    if (currentCardIndex >= flashcardsData.length) {
+      if (missedCards.length > 0) {
+        setNotification(`Reviewing missed cards. You missed ${missedCards.length} cards.`);
+      } else if (reviewMode && missedCards.length === 0) {
+        setNotification('All cards answered correctly!');
+      }
     }
-  }, [currentCardIndex, flashcardsData.length, missedCards, reviewMode]);
+  }, [currentCardIndex, flashcardsData.length, missedCards.length, reviewMode]);
 
-  const startReviewMode = () => {
+  const startReviewMode = useCallback(() => {
     if (missedCards.length > 0) {
       setFlashcardsData(missedCards);
       setMissedCards([]);
@@ -269,7 +275,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
     } else {
       setNotification('No missed cards to review!');
     }
-  };
+  }, [missedCards]);
 
   const handleReset = () => {
     setNotification(''); // Clear notification state

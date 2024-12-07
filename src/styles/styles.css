@@ -33,6 +33,12 @@ button {
   cursor: pointer;
 }
 
+/* Remove any conflicting hover styles */
+a:hover {
+  /* Ensure links do not override button hover actions */
+  /* No additional styles needed */
+}
+
 /* Dark mode styles */
 .dark-mode {
   background-color: #333 !important;

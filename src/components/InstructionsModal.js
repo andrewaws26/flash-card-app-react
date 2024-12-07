@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -34,28 +35,35 @@ const CloseButton = styled.button`
   }
 `;
 
-// Remove the CloseButton styled component
-
-const ModalContainer = styled.div`
-  // ...existing code...
+const FeatureInstruction = styled.p`
+  margin-bottom: 1rem;
 `;
 
 function InstructionsModal({ onClose }) {
+  // Get the current route
+  const location = useLocation();
+
+  // Map of routes to features and their instructions
+  const routeInstructions = {
+    '/flashcards': 'Tap on a flashcard to reveal the answer. Swipe right if you know it, swipe left if you don’t. You will review all the missed cards until you get them right.',
+    '/search': 'Enter the name of a drug in the search bar to view its FDA label. Use autocomplete suggestions for quick selection. Click on a result to view detailed information like dosage, warnings, and adverse reactions.',
+  };
+
+  // Determine the current instruction based on the route
+  const currentInstruction = routeInstructions[location.pathname];
+
   return (
-    <ModalContainer>
-      <ModalOverlay onClick={onClose}>
-        <ModalContent onClick={(e) => e.stopPropagation()}>
-          <h2>Instructions</h2>
-          <p>
-            Tap on a flashcard to reveal the answer. Swipe right if you know it, swipe left if you don't.
-          </p>
-          <p>
-            You will review all the missed cards until you get them right. Keep practicing until all cards are answered correctly.
-          </p>
-          <CloseButton onClick={onClose}>Got it</CloseButton>
-        </ModalContent>
-      </ModalOverlay>
-    </ModalContainer>
+    <ModalOverlay onClick={onClose}>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
+        <h2>Instructions</h2>
+        {currentInstruction ? (
+          <FeatureInstruction>{currentInstruction}</FeatureInstruction>
+        ) : (
+          <p>No instructions available for this page.</p>
+        )}
+        <CloseButton onClick={onClose}>Got it</CloseButton>
+      </ModalContent>
+    </ModalOverlay>
   );
 }
 

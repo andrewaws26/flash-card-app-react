@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+// src/pages/SearchPage.js
+
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import Fuse from 'fuse.js';
+import debounce from 'lodash.debounce'; // Ensure you have lodash.debounce installed
 
 // ============ Styled Components ============
 
@@ -11,6 +14,7 @@ const Container = styled.div`
   padding: 2rem;
   max-width: 900px;
   margin: 0 auto;
+  position: relative;
 `;
 
 const Title = styled.h1`
@@ -29,26 +33,74 @@ const Instructions = styled.p`
 
 const SearchBarContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  position: relative;
   margin-bottom: 1.5rem;
 `;
 
 const SearchInput = styled.input`
   flex: 1;
   min-width: 200px;
-  padding: 0.5rem;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 4px;
   background: ${({ theme }) => theme.surface};
   color: ${({ theme }) => theme.text};
+  
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.accent};
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+  }
+`;
+
+const AutocompleteList = styled.ul`
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+  background: ${({ theme }) => theme.surface};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-top: none;
+  max-height: 250px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 1000;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+`;
+
+const AutocompleteItem = styled.li`
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  background: ${({ $highlighted, theme }) => 
+    $highlighted ? theme.highlightedBackground : theme.surface};
+  color: ${({ $highlighted, theme }) => 
+    $highlighted ? theme.highlightedText : theme.text};
+  display: flex;
+  align-items: center;
+  
+  &:hover {
+    background: ${({ theme }) => theme.hover};
+    color: ${({ theme }) => theme.text};
+  }
+
+  /* Highlight the matching part */
+  span.match {
+    font-weight: bold;
+    background-color: ${({ theme }) => theme.accentLight};
+    border-radius: 3px;
+    padding: 0 2px;
+  }
 `;
 
 const SearchButton = styled.button`
-  padding: 0.5rem 1rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   background: ${({ theme }) => theme.accent};
   color: ${({ theme }) => theme.surface};
@@ -56,11 +108,12 @@ const SearchButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
-
+  transition: background 0.3s ease;
+  
   &:hover {
     background: ${({ theme }) => theme.secondary};
   }
-
+  
   &:disabled {
     background: ${({ theme }) => theme.disabled};
     cursor: not-allowed;
@@ -95,6 +148,10 @@ const DidYouMean = styled.div`
     color: ${({ theme }) => theme.accent};
     text-decoration: underline;
     cursor: pointer;
+
+    &:hover {
+      color: ${({ theme }) => theme.secondary};
+    }
   }
 `;
 
@@ -111,10 +168,11 @@ const ListItem = styled.li`
   background: ${({ theme }) => theme.surface};
   border-radius: 6px;
   margin-bottom: 1rem;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.2s;
 
   &:hover {
     background: ${({ theme }) => theme.hover};
+    transform: translateY(-2px);
   }
 `;
 
@@ -142,13 +200,17 @@ const SectionsList = styled.ul`
 const SectionItem = styled.li`
   cursor: pointer;
   margin-bottom: 0.5rem;
-  background: ${props => (props.$selected ? '#d0eaff' : '#eee')};
+  background: ${({ theme, $selected }) =>
+    $selected ? theme.selectedBackground : theme.itemBackground};
+  color: ${({ theme }) => theme.text};
   padding: 0.5rem;
   border-radius: 4px;
-  transition: background 0.2s;
+  transition: background 0.2s ease, color 0.2s ease;
 
   &:hover {
-    background: ${props => (props.$selected ? '#c3def3' : '#e2e2e2')};
+    background: ${({ theme, $selected }) =>
+      $selected ? theme.selectedHover : theme.hover};
+    color: ${({ theme }) => theme.hoverText};
   }
 `;
 
@@ -179,6 +241,7 @@ const Pagination = styled.div`
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background 0.3s ease;
 
     &:disabled {
       background: ${({ theme }) => theme.disabled};
@@ -262,15 +325,23 @@ const drugDictionary = [
   "Tylenol", "Advil", "Ibuprofen", "Aspirin", "Zyrtec", "Xanax", "Lipitor",
   "Amoxicillin", "Penicillin", "Metformin", "Lisinopril", "Hydroxyzine",
   "Benadryl", "Zoloft", "Atorvastatin", "Acetaminophen", "Prednisone",
-  "Wellbutrin", "Humira", "Crestor"
+  "Wellbutrin", "Humira", "Crestor", "Naproxen", "Celebrex", "Motrin",
+  "Aleve", "Voltaren", "Tramadol", "Morphine", "Oxycodone", "Percocet",
+  "Codeine", "Fentanyl", "Remicade", "Enbrel", "Neulasta", "Rituxan",
+  "Tamiflu", "Tamoxifen", "Gabapentin", "Pregabalin", "Sertraline",
+  "Fluoxetine", "Citalopram", "Escitalopram", "Paroxetine", "Venlafaxine",
+  "Clonazepam", "Diazepam", "Lorazepam", "Alprazolam", "Buspirone",
+  "Carbamazepine", "Valproate", "Lamotrigine", "Levetiracetam",
+  "Phenytoin", "Gabapentin", "Pregabalin", "Risperidone", "Olanzapine",
+  "Quetiapine", "Aripiprazole", "Clozapine", "Ziprasidone",
+  // Add more drug names as needed
 ];
 
-const fuse = new Fuse(drugDictionary, {
+// Initialize Fuse.js with useMemo to optimize performance
+const fuseOptionsConfig = {
   includeScore: true,
-  threshold: 0.5,
-});
-
-// ============ Main Component ============
+  threshold: 0.4, // Adjusted for better autocomplete suggestions
+};
 
 function SearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -284,6 +355,14 @@ function SearchPage() {
   const [expandedItem, setExpandedItem] = useState(null);
   const [expandedSection, setExpandedSection] = useState({});
   const [suggestion, setSuggestion] = useState(null);
+  const [autocompleteSuggestions, setAutocompleteSuggestions] = useState([]);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+  const autocompleteRef = useRef(null);
+  const suggestionRefs = useRef([]); // Array of refs for each suggestion
+
+  // Initialize Fuse with useMemo
+  const fuse = useMemo(() => new Fuse(drugDictionary, fuseOptionsConfig), []);
 
   const parseQuery = (query) => {
     const parts = query.trim().split(/\s+/);
@@ -340,15 +419,18 @@ function SearchPage() {
 
   const attemptSearch = async (drugName, page, skip, useWildcard) => {
     const wildcard = useWildcard ? '*' : '';
-    const finalSearchParam = `${dateRange}+AND+(openfda.brand_name:${drugName}${wildcard}+OR+openfda.generic_name:${drugName}${wildcard})`;
+    const finalSearchParam = `${dateRange}+AND+(openfda.brand_name:"${drugName}${wildcard}"+OR+openfda.generic_name:"${drugName}${wildcard}")`;
     const url = `https://api.fda.gov/drug/label.json?search=${finalSearchParam}&limit=${limit}&skip=${skip}`;
 
     try {
       const response = await fetch(url);
 
       if (!response.ok) {
+        if (response.status === 429) {
+          return { found: false, error: 'API rate limit exceeded. Please try again later.' };
+        }
         console.warn(`Non-OK response: ${response.status}`);
-        return { found: false, error: null };
+        return { found: false, error: `Error: Received status code ${response.status}` };
       }
 
       const data = await response.json();
@@ -374,7 +456,7 @@ function SearchPage() {
       return { found: false, error: null };
     } catch (err) {
       console.error('Error fetching data:', err);
-      return { found: false, error: err.message || 'Failed to fetch results' };
+      return { found: false, error: 'Network error. Please check your connection and try again.' };
     }
   };
 
@@ -448,13 +530,41 @@ function SearchPage() {
   };
 
   const handleKeyDown = (e) => {
+    if (autocompleteSuggestions.length === 0) return;
+
     if (e.key === 'Enter') {
-      setExpandedItem(null);
-      setExpandedSection({});
-      setCurrentSearchQuery(searchQuery);
-      if (searchQuery.trim() !== '') {
-        handleSearch(searchQuery, 1);
+      if (highlightedIndex >= 0 && highlightedIndex < autocompleteSuggestions.length) {
+        e.preventDefault();
+        selectSuggestion(autocompleteSuggestions[highlightedIndex]);
+      } else {
+        triggerSearch();
       }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex(prev => {
+        const nextIndex = prev + 1;
+        return nextIndex >= autocompleteSuggestions.length ? 0 : nextIndex;
+      });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex(prev => {
+        const nextIndex = prev - 1;
+        return nextIndex < 0 ? autocompleteSuggestions.length - 1 : nextIndex;
+      });
+    } else if (e.key === 'Escape') {
+      setAutocompleteSuggestions([]);
+      setHighlightedIndex(-1);
+    }
+  };
+
+  const triggerSearch = () => {
+    setExpandedItem(null);
+    setExpandedSection({});
+    setCurrentSearchQuery(searchQuery);
+    if (searchQuery.trim() !== '') {
+      handleSearch(searchQuery, 1);
+      setAutocompleteSuggestions([]);
+      setHighlightedIndex(-1);
     }
   };
 
@@ -462,7 +572,61 @@ function SearchPage() {
     setSearchQuery(suggestedQuery);
     setCurrentSearchQuery(suggestedQuery);
     handleSearch(suggestedQuery, 1);
+    setAutocompleteSuggestions([]);
+    setHighlightedIndex(-1);
   };
+
+  const selectSuggestion = (suggestion) => {
+    setSearchQuery(suggestion);
+    setCurrentSearchQuery(suggestion);
+    handleSearch(suggestion, 1);
+    setAutocompleteSuggestions([]);
+    setHighlightedIndex(-1);
+  };
+
+  // ============ Debounced Input Change Handler ============
+  const debouncedHandleInputChange = useMemo(() => debounce((value) => {
+    if (value.trim() === '') {
+      setAutocompleteSuggestions([]);
+      setHighlightedIndex(-1);
+      return;
+    }
+
+    const results = fuse.search(value);
+    const suggestions = results.slice(0, 5).map(result => result.item);
+    setAutocompleteSuggestions(suggestions);
+    // Automatically highlight the top suggestion
+    setHighlightedIndex(suggestions.length > 0 ? 0 : -1);
+  }, 300), [fuse]);
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    debouncedHandleInputChange(value);
+  };
+
+  // Close autocomplete when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (autocompleteRef.current && !autocompleteRef.current.contains(event.target)) {
+        setAutocompleteSuggestions([]);
+        setHighlightedIndex(-1);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Scroll the highlighted suggestion into view
+  useEffect(() => {
+    if (highlightedIndex === -1 || !suggestionRefs.current[highlightedIndex]) return;
+    suggestionRefs.current[highlightedIndex].scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+    });
+  }, [highlightedIndex]);
 
   return (
     <Container>
@@ -471,23 +635,45 @@ function SearchPage() {
         Enter a brand or generic drug name and press Enter or click "Search".
       </Instructions>
 
-      <SearchBarContainer>
+      <SearchBarContainer ref={autocompleteRef}>
         <SearchInput
           type="text"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder="Enter drug name..."
+          aria-autocomplete="list"
+          aria-controls="autocomplete-list"
+          aria-activedescendant={
+            highlightedIndex >= 0 ? `autocomplete-item-${highlightedIndex}` : undefined
+          }
         />
+        {autocompleteSuggestions.length > 0 && (
+          <AutocompleteList id="autocomplete-list" role="listbox">
+            {autocompleteSuggestions.map((suggestion, index) => {
+              // Highlight matching substring
+              const regex = new RegExp(`(${searchQuery})`, 'i');
+              const parts = suggestion.split(regex);
+              return (
+                <AutocompleteItem
+                  key={index}
+                  id={`autocomplete-item-${index}`}
+                  role="option"
+                  aria-selected={highlightedIndex === index}
+                  $highlighted={highlightedIndex === index}
+                  onMouseDown={() => selectSuggestion(suggestion)} // Use onMouseDown to prevent blur
+                  ref={el => suggestionRefs.current[index] = el}
+                >
+                  {parts.map((part, i) => 
+                    regex.test(part) ? <span key={i} className="match">{part}</span> : part
+                  )}
+                </AutocompleteItem>
+              );
+            })}
+          </AutocompleteList>
+        )}
         <SearchButton
-          onClick={() => {
-            setExpandedItem(null);
-            setExpandedSection({});
-            setCurrentSearchQuery(searchQuery);
-            if (searchQuery.trim() !== '') {
-              handleSearch(searchQuery, 1);
-            }
-          }}
+          onClick={triggerSearch}
           disabled={searchQuery.trim() === ''}
         >
           Search
@@ -588,4 +774,5 @@ function SearchPage() {
   );
 }
 
+// Ensure export is outside the function
 export default SearchPage;

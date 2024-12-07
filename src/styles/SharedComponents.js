@@ -1,8 +1,11 @@
+// src/styles/SharedComponents.js
 
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-export const StyledButton = styled.button`
-  background: ${({ active, theme }) => (active ? theme.buttonActive : theme.background)};
+// BaseButton: Encapsulates common button styles
+const BaseButton = styled.button`
+  background: ${({ active, theme }) => (active ? theme.buttonActive : theme.primary)};
   color: ${({ active, theme }) => (active ? theme.surface : theme.text)};
   padding: 0.6rem 1rem;
   border: 1px solid ${({ theme }) => theme.border};
@@ -11,12 +14,15 @@ export const StyledButton = styled.button`
   font-weight: 500;
   width: 100%;
   transition: background 0.3s ease, transform 0.2s ease;
-  box-shadow: ${({ theme }) => theme.shadow};
+  box-shadow: 0 2px 4px ${({ theme }) => theme.shadow};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background: ${({ theme }) => theme.buttonHover};
     transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.hoverShadow};
+    box-shadow: 0 4px 8px ${({ theme }) => theme.hoverShadow};
   }
 
   @media (max-width: 767px) {
@@ -27,90 +33,40 @@ export const StyledButton = styled.button`
   }
 `;
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  
-  ${({ $focusMode }) => $focusMode && `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.background};
-    z-index: 2000;
-    padding: 1rem;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column; /* Ensure column direction in focus mode */
-    align-items: center;
-    justify-content: center;
-  `}
-  
-  min-height: 400px;  /* Reduced minimum height */
-  padding: 0.5rem;     /* Reduced padding */
-  width: 100%;
-  max-width: none;
-
-  @media (max-width: 768px) {
-    
-  }
+// StyledButton: For regular buttons in the sidebar
+export const StyledButton = styled(BaseButton)`
+  /* Additional styles specific to StyledButton can be added here if needed */
 `;
 
-export const FocusButton = styled.button`
-  width: ${({ $focusMode }) => ($focusMode ? '2.5rem' : '3.5rem')};
-  height: ${({ $focusMode }) => ($focusMode ? '2.5rem' : '3.5rem')};
-  border-radius: 50%;
-  background: ${({ theme }) => theme.accent};
-  color: ${({ theme }) => theme.surface};
-  border: none;
-  cursor: pointer;
-  font-size: ${({ $focusMode }) => ($focusMode ? '1.25rem' : '1.75rem')};
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: ${({ theme }) => theme.shadow};
-  transition: all 0.3s ease;
-  opacity: ${({ $focusMode }) => ($focusMode ? '0.8' : '1')};
+// StyledLinkButton: For link-based buttons (Search, Flashcards)
+export const StyledLinkButton = styled(BaseButton).attrs({ as: Link })`
+  text-decoration: none;
+  background: ${({ theme }) => theme.primary};
+  color: ${({ theme }) => theme.text};
+  border: 1px solid ${({ theme }) => theme.border};
 
   &:hover {
-    transform: scale(1.1);
-    background: ${({ theme }) => theme.secondary};
-    opacity: 1;
-  }
-
-  span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    transform: translateY(-1px);
-  }
-
-  @media (max-width: 768px) {
-    ${({ $focusMode }) => $focusMode && `
-      background: ${({ theme }) => theme.surface};
-      color: ${({ theme }) => theme.text};
-      box-shadow: none;
-      border: 1px solid ${({ theme }) => theme.border};
-      width: 2.5rem;
-      height: 2.5rem;
-      font-size: 1.25rem;
-
-      &:hover {
-        background: ${({ theme }) => theme.buttonHover};
-        transform: scale(1.05);
-      }
-    `}
-    width: ${({ $focusMode }) => ($focusMode ? '2.25rem' : '3rem')};
-    height: ${({ $focusMode }) => ($focusMode ? '2.25rem' : '3rem')};
-    font-size: ${({ $focusMode }) => ($focusMode ? '1rem' : '1.5rem')};
+    background: ${({ theme }) => theme.buttonHover};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px ${({ theme }) => theme.hoverShadow};
   }
 `;
 
-// Add other shared styled components as needed
+// IconButton: For icon-only buttons (e.g., menu toggle)
+export const IconButton = styled(BaseButton)`
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  width: auto;
+  box-shadow: none;
+
+  &:hover {
+    background: ${({ theme }) => theme.buttonHover};
+    transform: scale(1.05);
+    box-shadow: none;
+  }
+
+  @media (max-width: 767px) {
+    padding: 0.4rem;
+  }
+`;

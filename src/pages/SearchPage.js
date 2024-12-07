@@ -398,7 +398,6 @@ function SearchPage() {
       <Title>Search FDA Drug Labeling (Recent)</Title>
       <Instructions>
         Enter a drug name, select brand or generic, and click "Search".<br/>
-        For example: <em>tylenol strength</em> or <em>acetaminophen usage</em>.
       </Instructions>
 
       <SearchBarContainer>

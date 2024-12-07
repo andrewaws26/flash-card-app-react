@@ -278,7 +278,6 @@ function SearchPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
   const [rawTotalResults, setRawTotalResults] = useState(0);
   const limit = 10;
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
@@ -369,7 +368,6 @@ function SearchPage() {
 
         setRawTotalResults(data.meta.results.total);
         setSearchResults(uniqueResults);
-        setTotalResults(uniqueResults.length);
         setCurrentPage(page);
         return { found: true, error: null };
       }

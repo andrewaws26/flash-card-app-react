@@ -113,7 +113,7 @@ function App() {
 function DynamicHeader() {
   const location = useLocation();
   const headers = {
-    '/': 'Welcome to Anatomy Flashcards',
+    '/': 'Welcome to Nerdy Nurse',
     '/search': 'Search Drug Labels',
     '/flashcards': 'Anatomy Flashcards',
   };

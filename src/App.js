@@ -8,7 +8,7 @@ import { AppContainer, MainContent, Sidebar } from './components/Layout';
 import styled from 'styled-components';
 import { GlobalStyles } from './GlobalStyles';
 import InstructionsModal from './components/InstructionsModal';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import SearchPage from './pages/SearchPage';
 import HomePage from './pages/HomePage';
 

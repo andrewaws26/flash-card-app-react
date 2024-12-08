@@ -11,7 +11,7 @@ const StatsContainer = styled.div`
   background: ${({ theme }) => theme.surface};
   border-radius: 0.5rem;
   box-shadow: ${({ theme }) => theme.shadow};
-  position: fixed; // Keep fixed positioning by default
+  position: fixed; // Maintain fixed positioning by default (desktop)
   z-index: 1;
 
   ${({ $focusMode }) => $focusMode && `
@@ -27,13 +27,18 @@ const StatsContainer = styled.div`
   `}
 
   @media (max-width: 768px) {
-    position: fixed; // Change to fixed positioning on mobile
-    bottom: 60px;      // Increased bottom spacing to provide space
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 600px;
-    margin: 0 auto;    // Remove top margin
+    position: relative; // Change to relative positioning on mobile
+    bottom: auto;
+    left: auto;
+    right: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0;
+    border-radius: 0;
+    flex-direction: row;
+    justify-content: space-around;
   }
 
   @media (min-width: 768px) {

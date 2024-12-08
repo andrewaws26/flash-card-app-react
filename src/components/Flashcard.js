@@ -209,8 +209,6 @@ const Term = styled.h2`
     font-size: 2rem; // Larger text on desktop
   }
 
-  @media (max-width: 768px) {
-    display: none; // Hide on mobile
   }
 `;
 

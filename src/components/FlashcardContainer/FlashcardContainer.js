@@ -242,7 +242,7 @@ function FlashcardContainer({ currentSection, onStatsUpdate, onReset }) {
     if (flashcardsData.length > 0) {
       onStatsUpdate(flashcardsData.length, correctAnswers, incorrectAnswers);
     }
-  }, [flashcardsData.length, correctAnswers, incorrectAnswers, onStatsUpdate]);
+  }, [flashcardsData.length, correctAnswers, incorrectAnswers]);
 
   const handleKnowIt = useCallback(() => {
     setCorrectAnswers(prev => prev + 1);
